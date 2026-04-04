@@ -72,7 +72,13 @@ archivos parquets, determinadas por el parametro **TipoStorage**:
 Parametros que alimentan la construccion de rutas:
 
 - Para Volume: `catalogoVolume`, `esquemaVolume`, `nombreVolume`.
-- Para Amazon S3: `bucketS3`, `prefijoS3`.
+- Para Amazon S3: `bucketS3`.
+
+> **Nota (v1.1.0)**: El parametro `prefijoS3` existe en la tabla
+> Parametros por herencia del Incremento 1 pero NO se utiliza en la
+> construccion de rutas S3. La ruta S3 se compone exclusivamente de
+> `s3://<bucket>/<ruta_relativa>`. Si en el futuro se requiere un
+> prefijo, se incorporara como parte de `<ruta_relativa>`.
 
 La utilidad `LsdpConstructorRutas.py` DEBE construir las rutas de
 forma dinamica segun el `TipoStorage` seleccionado. Todo lugar donde
