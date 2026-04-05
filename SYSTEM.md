@@ -254,12 +254,28 @@ solucion:
     historica, aprovechando al maximo el AutoLoader.
   - En Plata se manejaran vistas materializadas:
     - Para el Maestro de Cliente y los Saldos del cliente se consolidan en una sola vista
-      materializada como Dimension Tipo 1 (siempre los datos mas recientes).
+      materializada como Dimension Tipo 1 (siempre los datos mas recientes). La vista
+      unificada NO debe tener columnas duplicadas: los campos/columnas que existan en ambas
+      streaming tables (cmstfl y blncfl) se resuelven asi: del Maestro de Cliente se toman
+      las columnas de identificacion personal y sociodemografica (identificador de cliente,
+      nombre, apellidos, ubicacion, nacionalidad, etc.) y de la tabla de Saldos se toman
+      las columnas de informacion financiera y de saldos (estados de saldos, montos, intereses,
+      etc.). Las columnas que no sean comunes entre ambas tablas se incluyen tal cual de su
+      tabla de origen.
     - Para el Transaccional se manejara como una vista materializada separada. El
       procesamiento declarativo de los datos sobre esta vista materializada NO debe aplicar
       filtrados de datos, lo cual permite que LSDP decida automaticamente realizar cargas
       incrementales en lugar de cargas completas (aplicar filtros forzaria una carga
-      completa por defecto).
+      completa por defecto). La configuracion de la vista materializada transaccional debe
+      facilitar al maximo que LSDP realice cargas incrementales y no completas.
+    - Ambas vistas materializadas de plata DEBEN descartar las columnas `_rescued_data`,
+      `año`, `mes`, `dia` y `FechaIngestaDatos` (columnas de control/particion de bronce).
+    - La vista `clientes_saldos_consolidados` DEBE tener 5 expectativas de calidad de datos:
+      limite de credito > 0, identificador cliente NOT NULL, limite de credito NOT NULL,
+      fecha apertura cuenta > 2020-12-31, fecha nacimiento < 2009-01-01.
+    - La vista `transacciones_enriquecidas` DEBE tener 4 expectativas de calidad de datos:
+      moneda transaccion NOT NULL, monto neto NOT NULL, monto neto > 0,
+      identificador cliente NOT NULL.
   - En Oro se manejan vistas materializadas que siempre muestren la informacion mas reciente
     (Dimension Tipo 1).
 - En todo momento se debe respetar la estructura de archivos y carpetas que usa LSDP
@@ -329,6 +345,13 @@ comportamientos aislados y sin correlacion.
 
 ## Reglas de Negocio
 
+- En la Medalla de Plata, la vista materializada consolidada de clientes y saldos NO debe
+  tener columnas duplicadas entre las streaming tables de Maestro de Cliente (cmstfl) y
+  Saldos (blncfl). Para las columnas que existan en ambas tablas: las de identificacion
+  personal y sociodemografica (identificador de cliente, nombre, apellidos, ubicacion,
+  nacionalidad, etc.) se toman del Maestro de Cliente, y las de informacion financiera
+  y de saldos (estados de saldos, montos, intereses, etc.) se toman de la tabla de Saldos.
+  Las columnas exclusivas de cada tabla se incluyen tal cual.
 - En la Medalla de Plata, la tabla consolidada de clientes y saldos debe tener como minimo
   3 campos calculados, cada campo calculado debe basarse en lo equivalente a un CASE de SQL
   pero en pyspark, donde deben intervenir como minimo 3 campos/columnas de las tablas delta
@@ -336,9 +359,28 @@ comportamientos aislados y sin correlacion.
 - En la Medalla de Plata, en la tabla transaccional, deben crearse al menos 4 campos
   calculados, cada uno basado en minimo 2 o mas campos/columnas de tipo numerica para
   calcular un nuevo valor numerico.
+- En la Medalla de Plata, la tabla transaccional debe tener toda la configuracion necesaria
+  para facilitar que LSDP realice cargas de datos incrementales y no completas.
 - En la Medalla de Plata, la tabla consolidada de clientes y saldos debe tener un campo
   calculado a partir del identificador de cliente unico, generado a traves del algoritmo
   SHA2_256 (huella_identificacion_cliente).
+- En la Medalla de Plata, ambas vistas materializadas DEBEN descartar las siguientes
+  columnas de bronce durante la transformacion: `_rescued_data`, `año`, `mes`, `dia` y
+  `FechaIngestaDatos`. Estas columnas son de control o particion y NO deben propagarse
+  a la medalla de plata.
+- En la Medalla de Plata, la vista materializada `clientes_saldos_consolidados` DEBE tener
+  las siguientes expectativas de calidad de datos:
+  - El limite de credito debe ser mayor que 0.
+  - El identificador del cliente no debe ser nulo.
+  - El limite de credito no debe ser nulo.
+  - La fecha de apertura de la cuenta debe ser posterior al 31 de diciembre de 2020.
+  - La fecha de nacimiento debe ser anterior al 1 de enero de 2009.
+- En la Medalla de Plata, la vista materializada `transacciones_enriquecidas` DEBE tener
+  las siguientes expectativas de calidad de datos:
+  - La moneda de la transaccion no debe ser nula.
+  - El monto neto no debe ser nulo.
+  - El monto neto debe ser mayor que 0.
+  - El identificador del cliente no debe ser nulo.
 - Los campos calculados del proyecto original deben mantenerse:
   - Plata clientes_saldos_consolidados (4 campos): clasificacion_riesgo_cliente,
     categoria_saldo_disponible, perfil_actividad_bancaria, huella_identificacion_cliente.
@@ -571,7 +613,7 @@ Cada capa del medallion tiene su propio catalogo de Unity Catalog:
 
 | Entidad | Columnas | Liquid Cluster | Estrategia |
 |---|---|---|---|
-| plata.regional.clientes_saldos_consolidados | 177 | huella_identificacion_cliente, identificador_cliente | Dimension Tipo 1 (mas reciente por CUSTID) |
+| plata.regional.clientes_saldos_consolidados | Variable (sin columnas duplicadas entre cmstfl y blncfl) + 4 campos calculados | huella_identificacion_cliente, identificador_cliente | Dimension Tipo 1 (mas reciente por CUSTID). Columnas comunes personales de cmstfl, financieras de blncfl |
 | plata.regional.transacciones_enriquecidas | 66 | fecha_transaccion, identificador_cliente, tipo_transaccion | Sin filtros (carga incremental automatica por LSDP) |
 
 ### Vistas Materializadas de Oro (2 entidades)
