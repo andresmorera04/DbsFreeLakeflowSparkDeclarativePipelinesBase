@@ -1,34 +1,26 @@
 <!--
 Sync Impact Report
 ==================
-Version: 1.0.0 -> 1.1.0
+Version: 1.1.0 -> 1.2.0
 Tipo de cambio: MINOR (expansion material de principios existentes)
 
 Principios modificados:
-  - II. Storage Dinamico via TipoStorage:
-    Corregida ruta S3 de s3://<bucket>/<prefijo>/<ruta_relativa>
-    a s3://<bucket>/<ruta_relativa>
-  - III. Idempotencia Absoluta -> Idempotencia Diferenciada:
-    Redefinido para distinguir idempotencia absoluta (utilities,
-    transformations, conf, TDD, pipeline LSDP) de modelo de
-    mutacion diferenciada (notebooks generadores de parquets)
-  - VIII. TDD: Eliminada contradiccion "toda la solucion" vs
-    "desde incremento 2". Homologado a excluir incremento 1
   - IX. Paradigma Declarativo LSDP Estricto:
-    Aclarado que DLT es la API legacy (dlt.*) y LSDP la nueva
-    (@dp.table, @dp.materialized_view). Agregada URL oficial.
-    Agregada estrategia sin filtros en Plata transaccional
-    para carga incremental automatica
+    Agregada regla de deduplicacion de columnas en la vista
+    materializada consolidada de plata (clientes_saldos_consolidados):
+    columnas personales/sociodemograficas de cmstfl, columnas
+    financieras/saldos de blncfl, sin duplicados.
+    Agregada regla de configuracion para carga incremental en
+    la vista materializada transaccional de plata.
 
 Secciones modificadas:
-  - Restricciones Tecnologicas: "API legacy dlt.*" reemplaza
-    "Delta Live Tables" generico
+  - Arquitectura Medallion (Plata): expandida con regla de
+    deduplicacion de columnas y carga incremental transaccional
 
 Templates revisados:
   - .specify/templates/plan-template.md: compatible [OK]
   - .specify/templates/spec-template.md: compatible [OK]
   - .specify/templates/tasks-template.md: compatible [OK]
-  - .specify/templates/commands/*.md: no existe [OK]
 
 Elementos diferidos: Ninguno.
 -->
@@ -253,11 +245,24 @@ https://docs.databricks.com/aws/en/ldp/).
   paradigma declarativo.
 - Se DEBE aprovechar al maximo la arquitectura medallion:
   - Bronce: streaming tables, append-only con FechaIngestaDatos.
-  - Plata: vistas materializadas. Para la vista transaccional, el
-    procesamiento declarativo NO DEBE aplicar filtrados de datos,
-    lo cual permite que LSDP decida automaticamente realizar
-    cargas incrementales en lugar de cargas completas (aplicar
-    filtros forzaria una carga completa por defecto).
+  - Plata: vistas materializadas.
+    - La vista consolidada de clientes y saldos NO DEBE tener
+      columnas duplicadas entre las streaming tables de Maestro
+      de Cliente (cmstfl) y Saldos (blncfl). Para columnas que
+      existan en ambas tablas: las de identificacion personal y
+      sociodemografica (identificador de cliente, nombre,
+      apellidos, ubicacion, nacionalidad, etc.) se toman del
+      Maestro de Cliente; las de informacion financiera y saldos
+      (estados de saldos, montos, intereses, etc.) se toman de
+      la tabla de Saldos. Las columnas exclusivas de cada tabla
+      se incluyen tal cual.
+    - Para la vista transaccional, el procesamiento declarativo
+      NO DEBE aplicar filtrados de datos, lo cual permite que
+      LSDP decida automaticamente realizar cargas incrementales
+      en lugar de cargas completas (aplicar filtros forzaria una
+      carga completa por defecto). La configuracion DEBE facilitar
+      al maximo que LSDP realice cargas incrementales y no
+      completas.
   - Oro: vistas materializadas con producto de datos final.
 - Las tablas delta y vistas materializadas DEBEN tener activas:
   Change Data Feed, autoOptimize.autoCompact,
@@ -341,4 +346,4 @@ con los principios aqui establecidos.
   contexto completo del proyecto y alimenta los comandos de
   spec-kit.
 
-**Version**: 1.1.0 | **Ratified**: 2026-04-03 | **Last Amended**: 2026-04-03
+**Version**: 1.2.0 | **Ratified**: 2026-04-03 | **Last Amended**: 2026-04-05
