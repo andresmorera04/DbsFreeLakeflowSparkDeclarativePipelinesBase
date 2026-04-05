@@ -9,7 +9,7 @@
 
 ### Hallazgos Clave
 
-- El modulo `databricks.sdk.pipelines` proporciona decoradores `@dp.table` y `@dp.materialized_view` para definir tablas y vistas materializadas de manera declarativa.
+- El modulo `pyspark.pipelines` (importado como `from pyspark import pipelines as dp`) proporciona decoradores `@dp.table` y `@dp.materialized_view` para definir tablas y vistas materializadas de manera declarativa.
 - La API legacy `dlt.*` (`import dlt`) esta deprecada y NO es recomendada para nuevos proyectos.
 - Propiedades de tablas soportadas en LSDP:
   - Change Data Feed (CDF): soportado con configuracion en propiedades de tabla.
