@@ -12,7 +12,7 @@ El Incremento 1 establece la base del proyecto mediante: (1) investigacion inici
 ## Contexto Tecnico
 
 **Lenguaje/Version**: Python 3.x (PySpark via Databricks Runtime Serverless)
-**Dependencias Principales**: PySpark, `dbutils` (nota: `databricks.sdk.pipelines` no aplica hasta Incremento 2+)
+**Dependencias Principales**: PySpark, `dbutils` (nota: `pyspark.pipelines` no aplica hasta Incremento 2+)
 **Almacenamiento**: Unity Catalog Managed Volumes (por defecto) o Amazon S3 (via parametro TipoStorage)
 **Entorno de Desarrollo**: VS Code con extensiones Databricks Extension y Databricks Driver for SQLTools verificadas. Ejecucion via "Run on Serverless" (Decision aprobada - research.md Tema 4).
 **Pruebas**: Excluido para Incremento 1 (TDD aplica desde Incremento 2)

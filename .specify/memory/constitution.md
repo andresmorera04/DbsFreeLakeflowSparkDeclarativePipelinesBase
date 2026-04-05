@@ -216,6 +216,19 @@ extensiones de Databricks para Visual Studio Code.
 - Las extensiones Databricks Extension for Visual Studio Code y
   Databricks Driver for SQLTools DEBEN estar correctamente
   instaladas y configuradas.
+- Los notebooks TDD NO pueden usar `__file__` (no esta definido en
+  el runtime de Databricks). Para resolver rutas del filesystem se
+  DEBE usar `dbutils.notebook.entry_point.getDbutils().notebook()
+  .getContext().notebookPath().get()` con prefijo `/Workspace`.
+- **Alcance del TDD — REGLA PERMANENTE**: Las pruebas TDD cubren
+  EXCLUSIVAMENTE los modulos de `utilities/` (Python puro
+  importable). Los notebooks de `transformations/` NO son testeables
+  via TDD porque ejecutan codigo a nivel de modulo (patron Closure:
+  `spark.conf.get("pipelines.parameters.*")`, `obtener_parametros()`)
+  que requiere un pipeline LSDP desplegado. Al importar el modulo
+  desde TDD, ese codigo se ejecuta y falla porque no existe el
+  contexto del pipeline. La validacion de las transformaciones se
+  realiza unicamente mediante el despliegue del pipeline LSDP.
 
 **Razon**: Las pruebas garantizan que cada componente del pipeline
 funciona de forma aislada antes de la integracion, reduciendo
@@ -231,8 +244,9 @@ https://docs.databricks.com/aws/en/ldp/).
   renovada. Queda PROHIBIDO el uso de la API legacy `dlt.*`
   (`import dlt`). Se EXIGE el uso exclusivo de la API nueva con
   decoradores `@dp.table` y `@dp.materialized_view` (del modulo
-  `databricks.sdk.pipelines`). Toda referencia a documentacion
-  DEBE basarse en la URL oficial de LSDP.
+  `pyspark.pipelines`, importado como
+  `from pyspark import pipelines as dp`). Toda referencia a
+  documentacion DEBE basarse en la URL oficial de LSDP.
 - Los scripts de LSDP DEBEN ser codificados en PySpark/Python.
 - Los scripts de LSDP DEBEN ser ejecutados por Computo Serverless.
 - El codigo generado en LSDP DEBE ser totalmente compatible con el

@@ -226,7 +226,8 @@ solucion:
   (URL: https://docs.databricks.com/aws/en/ldp/). LSDP es la evolucion de Delta Live Tables
   (DLT) con una API renovada. Queda **prohibido** el uso de la API legacy `dlt.*`
   (`import dlt`). Se **exige** el uso exclusivo de la API nueva con decoradores `@dp.table`
-  y `@dp.materialized_view` (del modulo `databricks.sdk.pipelines`). Toda referencia a
+  y `@dp.materialized_view` (del modulo `pyspark.pipelines`, importado como
+  `from pyspark import pipelines as dp`). Toda referencia a
   documentacion DEBE basarse en la URL oficial de LSDP indicada.
 - Los Scripts de LSDP seran codificados en pyspark/python.
 - Los Scripts de LSDP seran ejecutados por **Computo Serverless** de forma estricta.
@@ -470,6 +471,29 @@ A continuacion se detalla los estandares y reglas de desarrollo:
   Los parametros de la tabla `Parametros` y las rutas se calculan a nivel de modulo
   (una sola vez al inicializar el pipeline) y quedan capturados por closure en las funciones
   decoradas. cloudpickle serializa automaticamente las variables capturadas.
+- **Resolucion automatica de imports en LSDP**: Cuando se registran multiples archivos fuente
+  en un pipeline LSDP, la plataforma resuelve automaticamente los imports entre carpetas
+  (utilities, transformations, etc.). Los scripts de transformacion DEBEN importar utilidades
+  directamente (`from utilities.LsdpConexionParametros import obtener_parametros`) SIN usar
+  `sys.path.insert()` ni manipulacion manual de rutas. La manipulacion de `sys.path` solo
+  es necesaria en notebooks de exploracion/TDD que se ejecutan fuera del pipeline LSDP.
+- **Prohibicion de `__file__` en notebooks Databricks**: Los notebooks de Databricks NO son
+  scripts Python estandar — se ejecutan en un runtime especial donde `__file__` no esta
+  definido. Para obtener la ruta del notebook actual se DEBE usar
+  `dbutils.notebook.entry_point.getDbutils().notebook().getContext().notebookPath().get()`
+  y preponerle `/Workspace` para obtener la ruta del filesystem.
+- **Importacion de modulos en notebooks TDD**: En Databricks, `sys.path.insert()` no siempre
+  resuelve modulos desde rutas `/Workspace/` del FUSE mount. Los notebooks TDD DEBEN
+  registrar explicitamente los modulos en `sys.modules` usando `importlib.util.spec_from_file_location`
+  con nombre bare (`LsdpConexionParametros`).
+- **Alcance del TDD — REGLA PERMANENTE**: Las pruebas TDD cubren EXCLUSIVAMENTE los modulos
+  de `utilities/` (Python puro importable). Los notebooks de `transformations/` NO son
+  testeables via TDD porque ejecutan codigo a nivel de modulo (patron Closure:
+  `spark.conf.get("pipelines.parameters.*")`, `obtener_parametros()`) que requiere un
+  pipeline LSDP desplegado. Al importar el modulo desde TDD, ese codigo se ejecuta y falla
+  porque no existe el contexto del pipeline. La validacion de las transformaciones se realiza
+  unicamente mediante el despliegue del pipeline LSDP. Esta regla aplica a TODOS los
+  incrementos presentes y futuros.
 
 ## Parametros del Pipeline LSDP
 
@@ -601,7 +625,7 @@ por el usuario el 2026-04-03. Rigen para todos los incrementos.
 **Fuente oficial**: https://docs.databricks.com/aws/en/ldp/
 
 **Hallazgos clave**:
-- El modulo `databricks.sdk.pipelines` proporciona decoradores `@dp.table` y
+- El modulo `pyspark.pipelines` (importado como `from pyspark import pipelines as dp`) proporciona decoradores `@dp.table` y
   `@dp.materialized_view` para definir tablas y vistas materializadas de forma declarativa.
 - La API legacy `dlt.*` (`import dlt`) esta deprecada y NO debe usarse en proyectos nuevos.
 - Propiedades soportadas: Change Data Feed, autoOptimize, Liquid Clustering, Expectativas
