@@ -36,9 +36,9 @@ Las siguientes historias no generan fases independientes porque sus requisitos s
 
 ## Phase 3: HU1 — Vista Materializada Consolidada de Clientes y Saldos (Prioridad: P1) 🎯 MVP
 
-**Objetivo**: Crear la vista materializada `clientes_saldos_consolidados` en `plata.regional` que consolida cmstfl y blncfl mediante LEFT JOIN con Dimension Tipo 1, 173 columnas renombradas a espanol snake_case, 4 campos calculados, 5 expectativas de calidad de datos, propiedades Delta optimizadas y liquid cluster activo.
+**Objetivo**: Crear la vista materializada `clientes_saldos_consolidados` en `plata.lab1` que consolida cmstfl y blncfl mediante LEFT JOIN con Dimension Tipo 1, 173 columnas renombradas a espanol snake_case, 4 campos calculados, 5 expectativas de calidad de datos, propiedades Delta optimizadas y liquid cluster activo.
 
-**Prueba Independiente**: Desplegar pipeline LSDP, verificar que `plata.regional.clientes_saldos_consolidados` existe con 173 columnas, sin duplicados entre cmstfl y blncfl, Dimension Tipo 1 aplicada (un solo registro por CUSTID), campos calculados correctos, expectativas registradas en la UI de LSDP, propiedades Delta activas, liquid cluster configurado.
+**Prueba Independiente**: Desplegar pipeline LSDP, verificar que `plata.lab1.clientes_saldos_consolidados` existe con 173 columnas, sin duplicados entre cmstfl y blncfl, Dimension Tipo 1 aplicada (un solo registro por CUSTID), campos calculados correctos, expectativas registradas en la UI de LSDP, propiedades Delta activas, liquid cluster configurado.
 
 **Incorpora**: HU3 (`table_properties` + `cluster_by` del decorador), HU4 (prints de observabilidad).
 
@@ -50,15 +50,15 @@ Las siguientes historias no generan fases independientes porque sus requisitos s
 
 - [X] T003 [US1] Implementar seleccion/renombrado de columnas, campos calculados, liquid cluster y observabilidad final dentro de la funcion decorada en `src/LSDP_Laboratorio_Basico/transformations/LsdpPlataClientesSaldos.py` — Sobre el DataFrame resultante del JOIN: (1) Construir lista de seleccion combinando ambos diccionarios de mapeo: `columnas_seleccion = [F.col(old).alias(new) for old, new in {**mapeo_cmstfl, **mapeo_blncfl}.items() if old in df_joined.columns]`. Aplicar `.select(columnas_seleccion)`. Resultado: 169 columnas renombradas a espanol snake_case. (2) Agregar 4 campos calculados con `.withColumn()`: `clasificacion_riesgo_cliente` = `F.when((F.col("score_cliente") >= 750) & (F.col("nivel_riesgo").isin("L","LOW")) & (F.col("calificacion_crediticia").isin("A","AA","AAA")), F.lit("RIESGO_BAJO")).when((F.col("score_cliente") >= 500) & (F.col("nivel_riesgo").isin("M","MED")), F.lit("RIESGO_MEDIO")).when((F.col("score_cliente") < 500) | (F.col("nivel_riesgo").isin("H","HIGH")), F.lit("RIESGO_ALTO")).otherwise(F.lit("SIN_CLASIFICAR"))` con manejo explicito de nulos; `categoria_saldo_disponible` = CASE sobre `saldo_disponible >= 100000 AND limite_credito >= 50000 AND saldo_total >= 150000 → PREMIUM`, `saldo_disponible >= 25000 AND limite_credito >= 10000 → ESTANDAR`, `saldo_disponible > 0 → BASICO`, else `SIN_SALDO`; `perfil_actividad_bancaria` = CASE sobre `cantidad_transacciones >= 100 AND cantidad_cuentas >= 3 AND ranking_prestamos >= 5 → MUY_ACTIVO`, `cantidad_transacciones >= 30 AND cantidad_cuentas >= 2 → ACTIVO`, `cantidad_transacciones >= 1 → MODERADO`, else `INACTIVO`; `huella_identificacion_cliente` = `F.sha2(F.col("identificador_cliente").cast("string"), 256)`. Usar `F.coalesce()` con `F.lit(0)` para proteger columnas numericas nulas en las condiciones CASE. (3) Invocar `reordenar_columnas_liquid_cluster(df, ["huella_identificacion_cliente", "identificador_cliente"])` para colocar campos del liquid cluster como primeras columnas. (4) Imprimir cantidad total de columnas (esperada: 173), nombres de los 4 campos calculados, campos del liquid cluster, confirmacion de deduplicacion exitosa y creacion de la vista. (5) Retornar DataFrame final. (RF-003, RF-004, RF-012, RF-026, RF-028)
 
-**Checkpoint**: La vista materializada `clientes_saldos_consolidados` esta completamente implementada. El pipeline puede desplegarse y validarse con `DESCRIBE plata.regional.clientes_saldos_consolidados`.
+**Checkpoint**: La vista materializada `clientes_saldos_consolidados` esta completamente implementada. El pipeline puede desplegarse y validarse con `DESCRIBE plata.lab1.clientes_saldos_consolidados`.
 
 ---
 
 ## Phase 4: HU2 — Vista Materializada Transaccional Enriquecida (Prioridad: P1)
 
-**Objetivo**: Crear la vista materializada `transacciones_enriquecidas` en `plata.regional` a partir de trxpfl SIN filtros para maximizar carga incremental automatica de LSDP, 64 columnas renombradas a espanol snake_case, 4 campos calculados numericos con proteccion de nulos y division por cero, 4 expectativas de calidad de datos, propiedades Delta optimizadas y liquid cluster activo.
+**Objetivo**: Crear la vista materializada `transacciones_enriquecidas` en `plata.lab1` a partir de trxpfl SIN filtros para maximizar carga incremental automatica de LSDP, 64 columnas renombradas a espanol snake_case, 4 campos calculados numericos con proteccion de nulos y division por cero, 4 expectativas de calidad de datos, propiedades Delta optimizadas y liquid cluster activo.
 
-**Prueba Independiente**: Desplegar pipeline LSDP, verificar que `plata.regional.transacciones_enriquecidas` existe con 64 columnas, sin filtros aplicados, campos calculados numericos correctos, expectativas registradas en la UI de LSDP, propiedades Delta activas, liquid cluster configurado.
+**Prueba Independiente**: Desplegar pipeline LSDP, verificar que `plata.lab1.transacciones_enriquecidas` existe con 64 columnas, sin filtros aplicados, campos calculados numericos correctos, expectativas registradas en la UI de LSDP, propiedades Delta activas, liquid cluster configurado.
 
 **Incorpora**: HU3 (`table_properties` + `cluster_by` del decorador), HU4 (prints de observabilidad).
 
@@ -151,7 +151,7 @@ Task: "Implementar 4 campos calculados numericos + liquid cluster + observabilid
 ### MVP Primero (Solo HU1)
 
 1. Completar Phase 3: HU1 — Vista consolidada de clientes y saldos
-2. **PARAR Y VALIDAR**: Desplegar pipeline LSDP y verificar vista en `plata.regional`
+2. **PARAR Y VALIDAR**: Desplegar pipeline LSDP y verificar vista en `plata.lab1`
 3. Deploy/demo si esta listo
 
 ### Entrega Incremental

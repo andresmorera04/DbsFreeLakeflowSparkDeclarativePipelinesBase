@@ -49,7 +49,7 @@ Las siguientes historias no generan fases independientes porque sus requisitos s
 
 **Objetivo**: Crear 3 streaming tables de bronce con AutoLoader, schema evolution activo, liquid cluster, propiedades Delta optimizadas y observabilidad completa. Cada script es autocontenido (patron Closure independiente).
 
-**Prueba Independiente**: Desplegar pipeline LSDP desde Databricks UI apuntando a parquets del Incremento 2. Verificar: 3 streaming tables en `bronce.regional` con conteos correctos, `FechaIngestaDatos` presente, campos del liquid cluster primeros en el schema, 5 propiedades Delta activas, y cero duplicados en re-ejecucion.
+**Prueba Independiente**: Desplegar pipeline LSDP desde Databricks UI apuntando a parquets del Incremento 2. Verificar: 3 streaming tables en `bronce.lab1` con conteos correctos, `FechaIngestaDatos` presente, campos del liquid cluster primeros en el schema, 5 propiedades Delta activas, y cero duplicados en re-ejecucion.
 
 **Incorpora**: HU-2 (`cluster_by` del decorador + reordenamiento), HU-4 (`table_properties` Delta), HU-5 (prints de observabilidad).
 

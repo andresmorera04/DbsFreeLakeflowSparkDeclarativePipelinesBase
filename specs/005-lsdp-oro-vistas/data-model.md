@@ -5,11 +5,11 @@
 
 ## Entidades
 
-### 1. Vista Materializada comportamiento_atm_cliente (`oro.regional.comportamiento_atm_cliente`)
+### 1. Vista Materializada comportamiento_atm_cliente (`oro.lab1.comportamiento_atm_cliente`)
 
 **Descripcion**: Vista materializada que agrega las transacciones de la vista materializada de plata `transacciones_enriquecidas` por `identificador_cliente` usando agregacion condicional. Calcula 5 metricas de comportamiento ATM: cantidad de depositos ATM, cantidad de retiros ATM, promedio de montos de depositos ATM, promedio de montos de retiros ATM y total de pagos al saldo. Todas las metricas se basan en la columna `monto_principal` de plata. Los valores nulos se reemplazan con 0 o 0.0 usando `F.coalesce`.
 **Cantidad de columnas**: 6 (1 identificador + 5 metricas)
-**Origen**: Vista materializada `plata.regional.transacciones_enriquecidas` (lectura cross-catalog con nombre completo)
+**Origen**: Vista materializada `plata.lab1.transacciones_enriquecidas` (lectura cross-catalog con nombre completo)
 **Estrategia de Actualizacion**: Refrescamiento gestionado por LSDP (la agregacion condicional sin filtros previos permite optimizacion automatica)
 **Liquid Cluster**: `identificador_cliente`
 **Expectativas de Calidad**: Ninguna — las expectativas de calidad se validan en plata
@@ -47,11 +47,11 @@ Los tipos de transaccion se leen de la tabla Parametros con la clave `TiposTrans
 
 ---
 
-### 2. Vista Materializada resumen_integral_cliente (`oro.regional.resumen_integral_cliente`)
+### 2. Vista Materializada resumen_integral_cliente (`oro.lab1.resumen_integral_cliente`)
 
 **Descripcion**: Vista materializada que combina datos dimensionales del cliente desde `clientes_saldos_consolidados` (plata) con metricas de comportamiento ATM desde `comportamiento_atm_cliente` (oro) mediante INNER JOIN por `identificador_cliente`. Solo incluye clientes presentes en ambas fuentes. Provee un panorama completo de cada cliente con actividad transaccional: identificacion, datos sociodemograficos, informacion financiera, estado general y metricas de actividad ATM. Dimension Tipo 1 heredada de plata.
 **Cantidad de columnas**: 22 (17 columnas dimensionales de plata + 5 metricas de oro)
-**Origen**: Vista materializada `plata.regional.clientes_saldos_consolidados` (INNER JOIN) + Vista materializada `oro.regional.comportamiento_atm_cliente`
+**Origen**: Vista materializada `plata.lab1.clientes_saldos_consolidados` (INNER JOIN) + Vista materializada `oro.lab1.comportamiento_atm_cliente`
 **Estrategia de Actualizacion**: Refrescamiento gestionado por LSDP
 **Liquid Cluster**: `huella_identificacion_cliente`, `identificador_cliente`
 **Expectativas de Calidad**: Ninguna — las expectativas se validan en plata
@@ -118,18 +118,18 @@ Los tipos de transaccion se leen de la tabla Parametros con la clave `TiposTrans
 ## Linaje de Datos
 
 ```
-transacciones_enriquecidas (plata.regional)
+transacciones_enriquecidas (plata.lab1)
     |  groupBy(identificador_cliente) + agregacion condicional
     |  F.count/F.avg/F.sum + F.when(tipo_transaccion == DATM/CATM/PGSL)
     |  F.coalesce para defaults 0/0.0
     v
-comportamiento_atm_cliente (oro.regional) — 6 columnas
+comportamiento_atm_cliente (oro.lab1) — 6 columnas
     |
     +---> INNER JOIN por identificador_cliente
     |
-clientes_saldos_consolidados (plata.regional) — 17 columnas seleccionadas
+clientes_saldos_consolidados (plata.lab1) — 17 columnas seleccionadas
     v
-resumen_integral_cliente (oro.regional) — 22 columnas
+resumen_integral_cliente (oro.lab1) — 22 columnas
 ```
 
 ## Dependencias entre Entidades
@@ -145,7 +145,7 @@ resumen_integral_cliente (oro.regional) — 22 columnas
 | Clave | Valor por defecto | Utilizada por |
 |-------|-------------------|---------------|
 | catalogoOro | oro | Catalogo destino de las vistas de oro |
-| esquemaOro | regional | Esquema destino de las vistas de oro |
+| esquemaOro | lab1 | Esquema destino de las vistas de oro |
 | catalogoPlata | plata | Catalogo fuente para leer vistas de plata |
-| esquemaPlata | regional | Esquema fuente para leer vistas de plata |
+| esquemaPlata | lab1 | Esquema fuente para leer vistas de plata |
 | TiposTransaccionesLabBase | DATM,CATM,PGSL | Tipos de transaccion para metricas ATM (separados por coma) |

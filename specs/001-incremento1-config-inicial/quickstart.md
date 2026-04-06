@@ -31,7 +31,7 @@ El archivo `conf/NbConfiguracionInicial.py` se ejecuta como notebook en Databric
 | Parametro | Valor por Defecto | Descripcion |
 |-----------|-------------------|-------------|
 | catalogoParametro | control | Catalogo para la tabla de parametros |
-| esquemaParametro | regional | Esquema para la tabla de parametros |
+| esquemaParametro | lab1 | Esquema para la tabla de parametros |
 | tablaParametros | Parametros | Nombre de la tabla de parametros |
 
 **Opciones de ejecucion**:
@@ -50,7 +50,7 @@ Despues de la ejecucion, verificar en la salida de pantalla:
 **Consulta de verificacion** (ejecutar en un notebook o SQL Editor):
 
 ```sql
-SELECT * FROM control.regional.Parametros ORDER BY Clave;
+SELECT * FROM control.lab1.Parametros ORDER BY Clave;
 ```
 
 Resultado esperado: 15 filas con columnas `Clave` y `Valor`.

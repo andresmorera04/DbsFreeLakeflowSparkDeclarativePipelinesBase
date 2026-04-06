@@ -45,7 +45,7 @@ from pyspark.sql.types import (
 # ==============================================================================
 
 dbutils.widgets.text("catalogoParametro",          "control",                          "Catalogo de la tabla Parametros")
-dbutils.widgets.text("esquemaParametro",           "regional",                         "Esquema de la tabla Parametros")
+dbutils.widgets.text("esquemaParametro",           "lab1",                         "Esquema de la tabla Parametros")
 dbutils.widgets.text("tablaParametros",            "Parametros",                       "Nombre de la tabla Parametros")
 dbutils.widgets.text("cantidadTransacciones",      "150000",                           "Cantidad de transacciones a generar")
 dbutils.widgets.text("fechaTransaccion",           "",                                 "Fecha de transacciones formato YYYY-MM-DD")

@@ -5,7 +5,7 @@
 
 ## Resumen
 
-Crear el pipeline Lakeflow Spark Declarative Pipelines (LSDP) con el procesamiento exclusivo de la medalla de bronce. El pipeline ingesta de forma incremental los parquets AS400 (CMSTFL, TRXPFL, BLNCFL) usando AutoLoader con schema evolution activo, crea tres streaming tables en `bronce.regional` con liquid cluster, marca de tiempo `FechaIngestaDatos` y propiedades Delta optimizadas. Todo el codigo usa exclusivamente la API `pyspark.pipelines` (importada como `from pyspark import pipelines as dp`) con decoradores `@dp.table`, es 100% compatible con Serverless Compute, y sigue el patron Closure para parametrizacion. Incluye tres utilidades reutilizables y un conjunto de pruebas TDD.
+Crear el pipeline Lakeflow Spark Declarative Pipelines (LSDP) con el procesamiento exclusivo de la medalla de bronce. El pipeline ingesta de forma incremental los parquets AS400 (CMSTFL, TRXPFL, BLNCFL) usando AutoLoader con schema evolution activo, crea tres streaming tables en `bronce.lab1` con liquid cluster, marca de tiempo `FechaIngestaDatos` y propiedades Delta optimizadas. Todo el codigo usa exclusivamente la API `pyspark.pipelines` (importada como `from pyspark import pipelines as dp`) con decoradores `@dp.table`, es 100% compatible con Serverless Compute, y sigue el patron Closure para parametrizacion. Incluye tres utilidades reutilizables y un conjunto de pruebas TDD.
 
 ## Contexto Tecnico
 

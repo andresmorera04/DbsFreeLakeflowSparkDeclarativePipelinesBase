@@ -7,7 +7,7 @@
 
 ### 1. Tabla Parametros
 
-**Ubicacion**: `{catalogoParametro}.{esquemaParametro}.{tablaParametros}` (por defecto: `control.regional.Parametros`)
+**Ubicacion**: `{catalogoParametro}.{esquemaParametro}.{tablaParametros}` (por defecto: `control.lab1.Parametros`)
 **Tipo**: Tabla Delta gestionada en Unity Catalog
 **Estrategia de idempotencia**: `CREATE OR REPLACE TABLE` + INSERT completo
 
@@ -21,20 +21,20 @@
 | Clave | Valor por Defecto | Descripcion | Categoria |
 |-------|-------------------|-------------|-----------|
 | catalogoBronce | bronce | Catalogo Unity Catalog para la medalla de bronce | Catalogos |
-| esquemaBronce | regional | Esquema dentro del catalogo de bronce | Esquemas |
+| esquemaBronce | lab1 | Esquema dentro del catalogo de bronce | Esquemas |
 | contenedorBronce | bronce | Nombre del directorio contenedor de bronce dentro del almacenamiento | Storage |
 | TipoStorage | Volume | Tipo de almacenamiento: "Volume" o "AmazonS3" | Storage |
 | catalogoVolume | bronce | Catalogo del Volume (aplica si TipoStorage=Volume) | Storage Volume |
-| esquemaVolume | regional | Esquema del Volume (aplica si TipoStorage=Volume) | Storage Volume |
+| esquemaVolume | lab1 | Esquema del Volume (aplica si TipoStorage=Volume) | Storage Volume |
 | nombreVolume | datos_bronce | Nombre del Volume gestionado (aplica si TipoStorage=Volume) | Storage Volume |
 | bucketS3 | (vacio) | Nombre del bucket S3 (aplica si TipoStorage=AmazonS3) | Storage S3 |
 | prefijoS3 | (vacio) | Prefijo dentro del bucket S3 (aplica si TipoStorage=AmazonS3) | Storage S3 |
 | DirectorioBronce | archivos | Subdirectorio dentro del contenedorBronce donde se almacenan los datos | Storage |
 | catalogoPlata | plata | Catalogo Unity Catalog para la medalla de plata | Catalogos |
-| esquemaPlata | regional | Esquema dentro del catalogo de plata | Esquemas |
+| esquemaPlata | lab1 | Esquema dentro del catalogo de plata | Esquemas |
 | catalogoOro | oro | Catalogo Unity Catalog para la medalla de oro | Catalogos |
-| esquemaOro | regional | Esquema dentro del catalogo de oro | Esquemas |
-| esquemaControl | regional | Esquema dentro del catalogo de control | Esquemas |
+| esquemaOro | lab1 | Esquema dentro del catalogo de oro | Esquemas |
+| esquemaControl | lab1 | Esquema dentro del catalogo de control | Esquemas |
 
 #### Transiciones de Estado
 
@@ -44,7 +44,7 @@ La tabla Parametros no tiene transiciones de estado propiamente dichas. Su ciclo
 
 ### 2. Volume Unity Catalog
 
-**Ubicacion**: `{catalogoVolume}.{esquemaVolume}.{nombreVolume}` (por defecto: `bronce.regional.datos_bronce`)
+**Ubicacion**: `{catalogoVolume}.{esquemaVolume}.{nombreVolume}` (por defecto: `bronce.lab1.datos_bronce`)
 **Tipo**: Volume gestionado (MANAGED) en Unity Catalog
 **Ruta de acceso**: `/Volumes/{catalogoVolume}/{esquemaVolume}/{nombreVolume}/`
 **Estrategia de idempotencia**: `CREATE VOLUME IF NOT EXISTS`
@@ -57,10 +57,10 @@ Creados automaticamente por el notebook con `CREATE CATALOG IF NOT EXISTS`.
 
 | Catalogo | Proposito | Esquema Asociado |
 |----------|-----------|-----------------|
-| control | Tablas de parametros, metadatos y control del pipeline | esquemaControl (defecto: regional) |
-| bronce | Streaming tables de ingesta desde parquets AS400 | esquemaBronce (defecto: regional) |
-| plata | Vistas materializadas de transformacion y enriquecimiento | esquemaPlata (defecto: regional) |
-| oro | Vistas materializadas de agregacion y producto de datos final | esquemaOro (defecto: regional) |
+| control | Tablas de parametros, metadatos y control del pipeline | esquemaControl (defecto: lab1) |
+| bronce | Streaming tables de ingesta desde parquets AS400 | esquemaBronce (defecto: lab1) |
+| plata | Vistas materializadas de transformacion y enriquecimiento | esquemaPlata (defecto: lab1) |
+| oro | Vistas materializadas de agregacion y producto de datos final | esquemaOro (defecto: lab1) |
 
 ### 4. Esquemas Unity Catalog (4 esquemas)
 
@@ -68,10 +68,10 @@ Creados automaticamente por el notebook con `CREATE SCHEMA IF NOT EXISTS`, uno p
 
 | Esquema | Catalogo | Parametro en tabla |
 |---------|----------|-------------------|
-| regional (defecto) | control | esquemaControl |
-| regional (defecto) | bronce | esquemaBronce |
-| regional (defecto) | plata | esquemaPlata |
-| regional (defecto) | oro | esquemaOro |
+| lab1 (defecto) | control | esquemaControl |
+| lab1 (defecto) | bronce | esquemaBronce |
+| lab1 (defecto) | plata | esquemaPlata |
+| lab1 (defecto) | oro | esquemaOro |
 
 ## Relaciones entre Entidades
 

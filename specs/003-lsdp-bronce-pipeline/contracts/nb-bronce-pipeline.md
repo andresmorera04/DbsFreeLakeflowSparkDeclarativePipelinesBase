@@ -250,7 +250,7 @@ def tabla_bronce_<nombre>():
 | Parametro | Formato | Requerido | Ejemplo |
 |-----------|---------|-----------|---------|
 | catalogoParametro | string | Si | `"control"` |
-| esquemaParametro | string | Si | `"regional"` |
+| esquemaParametro | string | Si | `"lab1"` |
 | tablaParametros | string | Si | `"Parametros"` |
 | rutaCompletaMaestroCliente | string | Si | `"LSDP_Base/As400/MaestroCliente/"` |
 | rutaCompletaTransaccional | string | Si | `"LSDP_Base/As400/Transaccional/"` |

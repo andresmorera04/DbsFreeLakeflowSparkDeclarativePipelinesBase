@@ -9,15 +9,15 @@
 
 ### Historia de Usuario 1 - Vista Materializada Consolidada de Clientes y Saldos (Prioridad: P1)
 
-El ingeniero de datos despliega el pipeline LSDP con la medalla de plata activa. Al ejecutar el pipeline, LSDP crea la vista materializada `clientes_saldos_consolidados` en `plata.regional` que consolida las streaming tables de bronce `cmstfl` (Maestro de Clientes) y `blncfl` (Saldos de Clientes) mediante un JOIN por CUSTID, aplicando Dimension Tipo 1 (siempre los datos mas recientes por cada cliente). La vista NO contiene columnas duplicadas: para las columnas que existen en ambas streaming tables de bronce (CUSTID, FechaIngestaDatos, _rescued_data), se aplica la regla de deduplicacion — CUSTID y las columnas de identificacion personal/sociodemografica se toman de cmstfl, y las columnas financieras/de saldos se toman de blncfl. Las columnas `FechaIngestaDatos` y `_rescued_data` de ambas tablas se descartan (RF-028). La vista incluye 4 campos calculados: `clasificacion_riesgo_cliente`, `categoria_saldo_disponible`, `perfil_actividad_bancaria` y `huella_identificacion_cliente`.
+El ingeniero de datos despliega el pipeline LSDP con la medalla de plata activa. Al ejecutar el pipeline, LSDP crea la vista materializada `clientes_saldos_consolidados` en `plata.lab1` que consolida las streaming tables de bronce `cmstfl` (Maestro de Clientes) y `blncfl` (Saldos de Clientes) mediante un JOIN por CUSTID, aplicando Dimension Tipo 1 (siempre los datos mas recientes por cada cliente). La vista NO contiene columnas duplicadas: para las columnas que existen en ambas streaming tables de bronce (CUSTID, FechaIngestaDatos, _rescued_data), se aplica la regla de deduplicacion — CUSTID y las columnas de identificacion personal/sociodemografica se toman de cmstfl, y las columnas financieras/de saldos se toman de blncfl. Las columnas `FechaIngestaDatos` y `_rescued_data` de ambas tablas se descartan (RF-028). La vista incluye 4 campos calculados: `clasificacion_riesgo_cliente`, `categoria_saldo_disponible`, `perfil_actividad_bancaria` y `huella_identificacion_cliente`.
 
 **Por que esta prioridad**: La vista consolidada de clientes y saldos es el corazon del producto de datos solicitado por el area de negocio. Sin ella, no es posible construir el `resumen_integral_cliente` de oro que es el entregable final del proyecto.
 
-**Prueba Independiente**: Se ejecuta el pipeline LSDP apuntando a las streaming tables de bronce ya pobladas. Se verifica que la vista materializada exista en `plata.regional`, que no tenga columnas duplicadas entre cmstfl y blncfl, que contenga los 4 campos calculados, que aplique Dimension Tipo 1 (solo el registro mas reciente por CUSTID) y que los valores de los campos calculados sean correctos segun la logica definida.
+**Prueba Independiente**: Se ejecuta el pipeline LSDP apuntando a las streaming tables de bronce ya pobladas. Se verifica que la vista materializada exista en `plata.lab1`, que no tenga columnas duplicadas entre cmstfl y blncfl, que contenga los 4 campos calculados, que aplique Dimension Tipo 1 (solo el registro mas reciente por CUSTID) y que los valores de los campos calculados sean correctos segun la logica definida.
 
 **Escenarios de Aceptacion**:
 
-1. **Dado** que las streaming tables de bronce `cmstfl` y `blncfl` contienen datos, **Cuando** se ejecuta el pipeline LSDP con la medalla de plata, **Entonces** se crea la vista materializada `clientes_saldos_consolidados` en `plata.regional` con la union de columnas de ambas tablas sin duplicados.
+1. **Dado** que las streaming tables de bronce `cmstfl` y `blncfl` contienen datos, **Cuando** se ejecuta el pipeline LSDP con la medalla de plata, **Entonces** se crea la vista materializada `clientes_saldos_consolidados` en `plata.lab1` con la union de columnas de ambas tablas sin duplicados.
 2. **Dado** que un CUSTID tiene multiples registros en `cmstfl` (por ingesta historica append-only), **Cuando** LSDP procesa la vista materializada, **Entonces** solo se toma el registro mas reciente de cada CUSTID (determinado por `FechaIngestaDatos` mas alto) tanto de cmstfl como de blncfl, implementando Dimension Tipo 1.
 3. **Dado** que la vista materializada esta creada, **Cuando** se inspeccionan sus columnas, **Entonces** no existen columnas duplicadas: CUSTID aparece una sola vez (tomado de cmstfl), las columnas `FechaIngestaDatos` y `_rescued_data` de cada tabla origen fueron descartadas (RF-028), y las columnas exclusivas de cada tabla se incluyen renombradas a espanol snake_case.
 4. **Dado** que la vista materializada esta creada, **Cuando** se verifican los campos calculados, **Entonces** existen: `clasificacion_riesgo_cliente` (basado en al menos 3 columnas de bronce con logica CASE), `categoria_saldo_disponible` (basado en al menos 3 columnas de bronce con logica CASE), `perfil_actividad_bancaria` (basado en al menos 3 columnas de bronce con logica CASE) y `huella_identificacion_cliente` (SHA2_256 del identificador de cliente).
@@ -34,15 +34,15 @@ El ingeniero de datos despliega el pipeline LSDP con la medalla de plata activa.
 
 ### Historia de Usuario 2 - Vista Materializada Transaccional Enriquecida (Prioridad: P1)
 
-El ingeniero de datos necesita que el pipeline LSDP cree la vista materializada `transacciones_enriquecidas` en `plata.regional` a partir de la streaming table de bronce `trxpfl`. La vista NO aplica filtros sobre los datos de bronce, lo cual permite que LSDP decida automaticamente realizar cargas incrementales en lugar de cargas completas. La configuracion de la vista debe facilitar al maximo las cargas incrementales. La vista incluye 4 campos calculados numericos: `monto_neto_comisiones`, `porcentaje_comision_sobre_monto`, `variacion_saldo_transaccion` e `indicador_impacto_financiero`.
+El ingeniero de datos necesita que el pipeline LSDP cree la vista materializada `transacciones_enriquecidas` en `plata.lab1` a partir de la streaming table de bronce `trxpfl`. La vista NO aplica filtros sobre los datos de bronce, lo cual permite que LSDP decida automaticamente realizar cargas incrementales en lugar de cargas completas. La configuracion de la vista debe facilitar al maximo las cargas incrementales. La vista incluye 4 campos calculados numericos: `monto_neto_comisiones`, `porcentaje_comision_sobre_monto`, `variacion_saldo_transaccion` e `indicador_impacto_financiero`.
 
 **Por que esta prioridad**: La vista transaccional enriquecida es la fuente directa de la vista `comportamiento_atm_cliente` de oro, que es el producto de datos central solicitado por el area de negocio para analizar el comportamiento de depositos y retiros en cajeros automaticos.
 
-**Prueba Independiente**: Se ejecuta el pipeline LSDP apuntando a la streaming table de bronce `trxpfl` ya poblada. Se verifica que la vista materializada exista en `plata.regional`, que no aplique filtros, que contenga los 4 campos calculados numericos y que los valores calculados sean coherentes con los datos fuente.
+**Prueba Independiente**: Se ejecuta el pipeline LSDP apuntando a la streaming table de bronce `trxpfl` ya poblada. Se verifica que la vista materializada exista en `plata.lab1`, que no aplique filtros, que contenga los 4 campos calculados numericos y que los valores calculados sean coherentes con los datos fuente.
 
 **Escenarios de Aceptacion**:
 
-1. **Dado** que la streaming table de bronce `trxpfl` contiene datos, **Cuando** se ejecuta el pipeline LSDP con la medalla de plata, **Entonces** se crea la vista materializada `transacciones_enriquecidas` en `plata.regional` con todas las columnas de la streaming table de bronce mas los 4 campos calculados.
+1. **Dado** que la streaming table de bronce `trxpfl` contiene datos, **Cuando** se ejecuta el pipeline LSDP con la medalla de plata, **Entonces** se crea la vista materializada `transacciones_enriquecidas` en `plata.lab1` con todas las columnas de la streaming table de bronce mas los 4 campos calculados.
 2. **Dado** que la vista materializada no aplica filtros, **Cuando** LSDP evalua la estrategia de carga, **Entonces** LSDP realiza cargas incrementales automaticamente en lugar de cargas completas, procesando solo los datos nuevos desde la ultima ejecucion.
 3. **Dado** que la vista materializada esta creada, **Cuando** se verifican los campos calculados, **Entonces** existen: `monto_neto_comisiones` (basado en al menos 2 columnas numericas), `porcentaje_comision_sobre_monto` (basado en al menos 2 columnas numericas), `variacion_saldo_transaccion` (basado en al menos 2 columnas numericas) e `indicador_impacto_financiero` (basado en al menos 2 columnas numericas).
 4. **Dado** que se agrega un nuevo lote de transacciones y se re-ejecuta el pipeline, **Cuando** LSDP actualiza la vista materializada, **Entonces** solo los registros nuevos son procesados y enriquecidos con los campos calculados, sin reprocesar los registros previamente cargados.
@@ -66,8 +66,8 @@ El ingeniero de datos verifica que cada vista materializada de plata fue creada 
 
 **Escenarios de Aceptacion**:
 
-1. **Dado** que el pipeline LSDP se ejecuto exitosamente, **Cuando** se consultan las propiedades de `plata.regional.clientes_saldos_consolidados`, **Entonces** tiene activas: `delta.enableChangeDataFeed=true`, `delta.autoOptimize.autoCompact=true`, `delta.autoOptimize.optimizeWrite=true`, `delta.deletedFileRetentionDuration=interval 30 days` y `delta.logRetentionDuration=interval 60 days`.
-2. **Dado** que el pipeline LSDP se ejecuto exitosamente, **Cuando** se consultan las propiedades de `plata.regional.transacciones_enriquecidas`, **Entonces** tiene las mismas propiedades Delta que `clientes_saldos_consolidados`.
+1. **Dado** que el pipeline LSDP se ejecuto exitosamente, **Cuando** se consultan las propiedades de `plata.lab1.clientes_saldos_consolidados`, **Entonces** tiene activas: `delta.enableChangeDataFeed=true`, `delta.autoOptimize.autoCompact=true`, `delta.autoOptimize.optimizeWrite=true`, `delta.deletedFileRetentionDuration=interval 30 days` y `delta.logRetentionDuration=interval 60 days`.
+2. **Dado** que el pipeline LSDP se ejecuto exitosamente, **Cuando** se consultan las propiedades de `plata.lab1.transacciones_enriquecidas`, **Entonces** tiene las mismas propiedades Delta que `clientes_saldos_consolidados`.
 3. **Dado** que la vista `clientes_saldos_consolidados` fue creada, **Cuando** se consulta su liquid cluster, **Entonces** esta definido sobre los campos `huella_identificacion_cliente` e `identificador_cliente`.
 4. **Dado** que la vista `transacciones_enriquecidas` fue creada, **Cuando** se consulta su liquid cluster, **Entonces** esta definido sobre los campos `fecha_transaccion`, `identificador_cliente` y `tipo_transaccion`.
 5. **Dado** que las vistas materializadas estan creadas, **Cuando** se inspeccionan los nombres de columnas, **Entonces** todos siguen el formato snake_case en espanol, son intuitivos, con minimo dos palabras y no coinciden con los nombres de las columnas de bronce.
@@ -175,11 +175,11 @@ El ingeniero de datos necesita un conjunto de pruebas TDD que validen el comport
 
 ### Entidades Clave
 
-- **Vista Materializada clientes_saldos_consolidados** (`plata.regional.clientes_saldos_consolidados`): Vista materializada que consolida el Maestro de Clientes (cmstfl) y los Saldos (blncfl) de bronce como Dimension Tipo 1. Columnas sin duplicados entre ambas tablas fuente + 4 campos calculados. Excluye: `_rescued_data`, `año`, `mes`, `dia`, `FechaIngestaDatos`. 5 expectativas de calidad de datos (limite de credito > 0, identificador cliente NOT NULL, limite de credito NOT NULL, fecha apertura cuenta > 2020-12-31, fecha nacimiento < 2009-01-01). Liquid Cluster: `huella_identificacion_cliente`, `identificador_cliente`. Todas las columnas renombradas a espanol snake_case.
-- **Vista Materializada transacciones_enriquecidas** (`plata.regional.transacciones_enriquecidas`): Vista materializada a partir de la streaming table transaccional (trxpfl) de bronce. Sin filtros para maximizar carga incremental automatica de LSDP. Incluye 4 campos calculados numericos. Excluye: `_rescued_data`, `año`, `mes`, `dia`, `FechaIngestaDatos`. 4 expectativas de calidad de datos (moneda transaccion NOT NULL, monto neto NOT NULL, monto neto > 0, identificador cliente NOT NULL). Liquid Cluster: `fecha_transaccion`, `identificador_cliente`, `tipo_transaccion`. Todas las columnas renombradas a espanol snake_case.
-- **Streaming Table cmstfl** (`bronce.regional.cmstfl`): Tabla fuente de bronce con 72 columnas (70 originales del parquet CMSTFL + FechaIngestaDatos + _rescued_data). Creada en el Incremento 3.
-- **Streaming Table trxpfl** (`bronce.regional.trxpfl`): Tabla fuente de bronce con 62 columnas (60 originales del parquet TRXPFL + FechaIngestaDatos + _rescued_data). Creada en el Incremento 3.
-- **Streaming Table blncfl** (`bronce.regional.blncfl`): Tabla fuente de bronce con 102 columnas (100 originales del parquet BLNCFL + FechaIngestaDatos + _rescued_data). Creada en el Incremento 3.
+- **Vista Materializada clientes_saldos_consolidados** (`plata.lab1.clientes_saldos_consolidados`): Vista materializada que consolida el Maestro de Clientes (cmstfl) y los Saldos (blncfl) de bronce como Dimension Tipo 1. Columnas sin duplicados entre ambas tablas fuente + 4 campos calculados. Excluye: `_rescued_data`, `año`, `mes`, `dia`, `FechaIngestaDatos`. 5 expectativas de calidad de datos (limite de credito > 0, identificador cliente NOT NULL, limite de credito NOT NULL, fecha apertura cuenta > 2020-12-31, fecha nacimiento < 2009-01-01). Liquid Cluster: `huella_identificacion_cliente`, `identificador_cliente`. Todas las columnas renombradas a espanol snake_case.
+- **Vista Materializada transacciones_enriquecidas** (`plata.lab1.transacciones_enriquecidas`): Vista materializada a partir de la streaming table transaccional (trxpfl) de bronce. Sin filtros para maximizar carga incremental automatica de LSDP. Incluye 4 campos calculados numericos. Excluye: `_rescued_data`, `año`, `mes`, `dia`, `FechaIngestaDatos`. 4 expectativas de calidad de datos (moneda transaccion NOT NULL, monto neto NOT NULL, monto neto > 0, identificador cliente NOT NULL). Liquid Cluster: `fecha_transaccion`, `identificador_cliente`, `tipo_transaccion`. Todas las columnas renombradas a espanol snake_case.
+- **Streaming Table cmstfl** (`bronce.lab1.cmstfl`): Tabla fuente de bronce con 72 columnas (70 originales del parquet CMSTFL + FechaIngestaDatos + _rescued_data). Creada en el Incremento 3.
+- **Streaming Table trxpfl** (`bronce.lab1.trxpfl`): Tabla fuente de bronce con 62 columnas (60 originales del parquet TRXPFL + FechaIngestaDatos + _rescued_data). Creada en el Incremento 3.
+- **Streaming Table blncfl** (`bronce.lab1.blncfl`): Tabla fuente de bronce con 102 columnas (100 originales del parquet BLNCFL + FechaIngestaDatos + _rescued_data). Creada en el Incremento 3.
 - **Tabla Parametros**: Tabla Delta existente en Unity Catalog con columnas `Clave` y `Valor`. Provee la configuracion dinamica del pipeline. Creada en el Incremento 1.
 
 ### Parametros del Pipeline LSDP — Existentes y Nuevos para Plata
@@ -187,7 +187,7 @@ El ingeniero de datos necesita un conjunto de pruebas TDD que validen el comport
 | Parametro | Tipo | Ejemplo | Descripcion | Nuevo/Existente |
 | --- | --- | --- | --- | --- |
 | catalogoParametro | string | control | Catalogo UC donde reside la tabla Parametros | Existente (Inc. 3) |
-| esquemaParametro | string | regional | Esquema donde reside la tabla Parametros | Existente (Inc. 3) |
+| esquemaParametro | string | lab1 | Esquema donde reside la tabla Parametros | Existente (Inc. 3) |
 | tablaParametros | string | Parametros | Nombre de la tabla Parametros | Existente (Inc. 3) |
 
 
@@ -197,7 +197,7 @@ El ingeniero de datos necesita un conjunto de pruebas TDD que validen el comport
 
 ### Resultados Medibles
 
-- **CE-001**: Las dos vistas materializadas (`plata.regional.clientes_saldos_consolidados` y `plata.regional.transacciones_enriquecidas`) se crean exitosamente en la primera ejecucion del pipeline.
+- **CE-001**: Las dos vistas materializadas (`plata.lab1.clientes_saldos_consolidados` y `plata.lab1.transacciones_enriquecidas`) se crean exitosamente en la primera ejecucion del pipeline.
 - **CE-002**: La vista `clientes_saldos_consolidados` no contiene columnas duplicadas entre cmstfl y blncfl: cada columna aparece exactamente una vez.
 - **CE-003**: Los 4 campos calculados de `clientes_saldos_consolidados` (clasificacion_riesgo_cliente, categoria_saldo_disponible, perfil_actividad_bancaria, huella_identificacion_cliente) producen valores correctos y no nulos para el 100% de los registros con datos fuente validos.
 - **CE-004**: Los 4 campos calculados de `transacciones_enriquecidas` (monto_neto_comisiones, porcentaje_comision_sobre_monto, variacion_saldo_transaccion, indicador_impacto_financiero) producen valores numericos coherentes para el 100% de los registros con datos fuente validos.
@@ -213,13 +213,13 @@ El ingeniero de datos necesita un conjunto de pruebas TDD que validen el comport
 
 ## Supuestos
 
-- Las streaming tables de bronce (`cmstfl`, `trxpfl`, `blncfl`) estan creadas y pobladas por el Incremento 3 y disponibles en `bronce.regional`.
+- Las streaming tables de bronce (`cmstfl`, `trxpfl`, `blncfl`) estan creadas y pobladas por el Incremento 3 y disponibles en `bronce.lab1`.
 - La tabla Parametros existe en Unity Catalog con los registros necesarios, incluyendo `catalogoPlata`, `esquemaPlata` y `catalogoOro`.
 - Las streaming tables de bronce se leen por nombre simple (`spark.read.table("cmstfl")`) ya que residen en el mismo catalogo y esquema por defecto del pipeline LSDP. Las vistas materializadas de plata SI usan el namespace completo (`catalogo.esquema.vistaMaterializada`) construido con `catalogoPlata` y `esquemaPlata` de la tabla Parametros.
 - Las utilidades existentes (`LsdpConexionParametros`, `LsdpConstructorRutas`, `LsdpReordenarColumnasLiquidCluster`) estan disponibles y funcionales desde el Incremento 3.
 - El computo Serverless esta disponible en el workspace de Databricks Free Edition.
 - LSDP resuelve automaticamente los imports entre carpetas del pipeline (utilities, transformations).
-- Los catalogos `plata` y su esquema `regional` fueron creados en el Incremento 1 por el notebook de configuracion inicial.
+- Los catalogos `plata` y su esquema `lab1` fueron creados en el Incremento 1 por el notebook de configuracion inicial.
 - La columna CUSTID es la unica columna estructuralmente comun entre los parquets originales de CMSTFL y BLNCFL. A nivel de bronce, se agregan tambien `FechaIngestaDatos` y `_rescued_data` como columnas comunes adicionales.
 - Las columnas `año`, `mes` y `dia` se incluyen en la lista de exclusion por peticion explicita del area de negocio. Si estas columnas no existen en las streaming tables de bronce al momento de implementacion, la transformacion debe manejar su ausencia sin error.
 - Las expectativas de calidad de datos usan los nombres de columna de plata (espanol snake_case), no los nombres de bronce (AS400). El mapeo exacto de nombres se define durante la planificacion.
