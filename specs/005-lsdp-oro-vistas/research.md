@@ -55,8 +55,8 @@
 **Pregunta**: Como implementar un INNER JOIN entre una vista materializada de plata y otra de oro dentro del mismo pipeline LSDP?
 
 **Hallazgos**:
-- La vista `clientes_saldos_consolidados` reside en `plata.regional` (catalogo diferente al de oro). Para leerla desde un script de oro se usa `spark.read.table("catalogo_plata.esquema_plata.clientes_saldos_consolidados")` con nombre completo de tres partes.
-- La vista `comportamiento_atm_cliente` reside en `oro.regional`. Se lee con nombre completo de tres partes: `spark.read.table("catalogo_oro.esquema_oro.comportamiento_atm_cliente")`.
+- La vista `clientes_saldos_consolidados` reside en `plata.lab1` (catalogo diferente al de oro). Para leerla desde un script de oro se usa `spark.read.table("catalogo_plata.esquema_plata.clientes_saldos_consolidados")` con nombre completo de tres partes.
+- La vista `comportamiento_atm_cliente` reside en `oro.lab1`. Se lee con nombre completo de tres partes: `spark.read.table("catalogo_oro.esquema_oro.comportamiento_atm_cliente")`.
 - LSDP detecta automaticamente las dependencias entre tablas/vistas del pipeline y ejecuta en el orden correcto (`comportamiento_atm_cliente` se crea antes que `resumen_integral_cliente`).
 - El INNER JOIN en PySpark: `df_plata.join(df_oro, on="identificador_cliente", how="inner")`.
 - Con `how="inner"`, solo los clientes que existen en ambas fuentes se incluyen. Los clientes de plata sin ninguna transaccion no aparecen en el resumen.
@@ -71,12 +71,12 @@
 
 **Estado**: APROBADA POR EL USUARIO (2026-04-05)
 
-**Pregunta**: Como hacer que las vistas de oro se creen en `oro.regional` cuando el catalogo por defecto del pipeline es `bronce.regional`?
+**Pregunta**: Como hacer que las vistas de oro se creen en `oro.lab1` cuando el catalogo por defecto del pipeline es `bronce.lab1`?
 
 **Hallazgos**:
 - El decorador `@dp.materialized_view` acepta los parametros `catalog` y `schema` para especificar un catalogo y esquema diferente al por defecto del pipeline.
-- Uso: `@dp.materialized_view(name="nombre", catalog="oro", schema="regional", table_properties={...}, cluster_by=[...])`.
-- Este patron ya fue usado exitosamente en los scripts de plata del Incremento 4 para crear vistas en `plata.regional`.
+- Uso: `@dp.materialized_view(name="nombre", catalog="oro", schema="lab1", table_properties={...}, cluster_by=[...])`.
+- Este patron ya fue usado exitosamente en los scripts de plata del Incremento 4 para crear vistas en `plata.lab1`.
 - Los valores de `catalog` y `schema` se obtienen de la tabla Parametros (claves `catalogoOro` y `esquemaOro`) y se capturan por closure.
 - El pipeline LSDP debe tener permisos para crear tablas en el catalogo destino.
 

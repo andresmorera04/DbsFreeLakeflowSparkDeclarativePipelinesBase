@@ -5,11 +5,11 @@
 
 ## Entidades
 
-### 1. Vista Materializada clientes_saldos_consolidados (`plata.regional.clientes_saldos_consolidados`)
+### 1. Vista Materializada clientes_saldos_consolidados (`plata.lab1.clientes_saldos_consolidados`)
 
 **Descripcion**: Vista materializada que consolida el Maestro de Clientes (cmstfl) y los Saldos (blncfl) de bronce como Dimension Tipo 1 (siempre los datos mas recientes por cada cliente). Implementa LEFT JOIN por CUSTID con cmstfl como tabla base. Columnas sin duplicados entre ambas tablas fuente, todas renombradas a espanol snake_case, mas 4 campos calculados.
 **Cantidad de columnas**: 173 (70 de cmstfl + 99 de blncfl excluyendo CUSTID/FechaIngestaDatos/_rescued_data + 4 campos calculados)
-**Origen**: Streaming tables `bronce.regional.cmstfl` (72 cols) y `bronce.regional.blncfl` (102 cols)
+**Origen**: Streaming tables `bronce.lab1.cmstfl` (72 cols) y `bronce.lab1.blncfl` (102 cols)
 **Estrategia de Actualizacion**: Refrescamiento completo (Dimension Tipo 1 con Window + JOIN requiere recalculo)
 **Liquid Cluster**: `huella_identificacion_cliente`, `identificador_cliente`
 **Expectativas de Calidad**: 5 (`@dp.expect`, modo observacional)
@@ -284,11 +284,11 @@ Las siguientes columnas de bronce se descartan y NO aparecen en la vista de plat
 
 ---
 
-### 2. Vista Materializada transacciones_enriquecidas (`plata.regional.transacciones_enriquecidas`)
+### 2. Vista Materializada transacciones_enriquecidas (`plata.lab1.transacciones_enriquecidas`)
 
 **Descripcion**: Vista materializada a partir de la streaming table transaccional (trxpfl) de bronce. Sin filtros para maximizar carga incremental automatica de LSDP. Incluye 4 campos calculados numericos. Todas las columnas renombradas a espanol snake_case.
 **Cantidad de columnas**: 64 (60 originales del parquet TRXPFL - columnas excluidas + 4 campos calculados)
-**Origen**: Streaming table `bronce.regional.trxpfl` (62 cols)
+**Origen**: Streaming table `bronce.lab1.trxpfl` (62 cols)
 **Estrategia de Actualizacion**: Carga incremental automatica (sin filtros, sin funciones no deterministas)
 **Liquid Cluster**: `fecha_transaccion`, `identificador_cliente`, `tipo_transaccion`
 **Expectativas de Calidad**: 4 (`@dp.expect`, modo observacional)
@@ -429,9 +429,9 @@ Identicas a `clientes_saldos_consolidados` (5 propiedades Delta en tabla anterio
 [Parquets AS400]
      |
      v
-[bronce.regional.cmstfl]  (72 cols, streaming table)
-[bronce.regional.blncfl]  (102 cols, streaming table)
-[bronce.regional.trxpfl]  (62 cols, streaming table)
+[bronce.lab1.cmstfl]  (72 cols, streaming table)
+[bronce.lab1.blncfl]  (102 cols, streaming table)
+[bronce.lab1.trxpfl]  (62 cols, streaming table)
      |                          |
      v                          v
 [Dimension Tipo 1]         [Sin filtros]
@@ -442,7 +442,7 @@ Identicas a `clientes_saldos_consolidados` (5 propiedades Delta en tabla anterio
 [5 @dp.expect]             [4 @dp.expect]
      |                          |
      v                          v
-[plata.regional.              [plata.regional.
+[plata.lab1.              [plata.lab1.
  clientes_saldos_consolidados] transacciones_enriquecidas]
  (173 cols, materialized view) (64 cols, materialized view)
 ```

@@ -3,7 +3,7 @@
 # MAGIC # LsdpPlataTransacciones
 # MAGIC
 # MAGIC Script LSDP que define la vista materializada `transacciones_enriquecidas`
-# MAGIC en `plata.regional`.
+# MAGIC en `plata.lab1`.
 # MAGIC
 # MAGIC Lee la streaming table de bronce `trxpfl` SIN filtros para maximizar la
 # MAGIC carga incremental automatica de LSDP. Excluye columnas de control de bronce,
@@ -50,7 +50,7 @@ diccionario_parametros = obtener_parametros(
 
 # --- Extraccion de catalogos y esquemas de plata ---
 catalogo_plata = diccionario_parametros.get("catalogoPlata", "plata")
-esquema_plata  = diccionario_parametros.get("esquemaPlata",  "regional")
+esquema_plata  = diccionario_parametros.get("esquemaPlata",  "lab1")
 
 print(f"[LsdpPlataTransacciones] Catalogo plata destino : {catalogo_plata}")
 print(f"[LsdpPlataTransacciones] Esquema plata destino  : {esquema_plata}")

@@ -8,11 +8,11 @@
 1. **Incrementos anteriores completados**:
    - Inc. 1: Tabla Parametros creada en Unity Catalog con todas las claves, incluyendo `catalogoBronce`, `catalogoPlata`, `esquemaPlata`, `catalogoOro`.
    - Inc. 2: Parquets AS400 generados (CMSTFL, TRXPFL, BLNCFL).
-   - Inc. 3: Pipeline LSDP con medalla de bronce funcional. Streaming tables `bronce.regional.cmstfl`, `bronce.regional.trxpfl`, `bronce.regional.blncfl` pobladas.
+   - Inc. 3: Pipeline LSDP con medalla de bronce funcional. Streaming tables `bronce.lab1.cmstfl`, `bronce.lab1.trxpfl`, `bronce.lab1.blncfl` pobladas.
 
 2. **Entorno Databricks**:
    - Databricks Free Edition con Serverless Compute disponible.
-   - Catalogos `plata` y esquema `regional` creados por `conf/NbConfiguracionInicial.py`.
+   - Catalogos `plata` y esquema `lab1` creados por `conf/NbConfiguracionInicial.py`.
    - Extension Databricks para VS Code configurada y conectada al workspace.
 
 ## Estructura de Archivos Nuevos
@@ -32,10 +32,10 @@ Los scripts de plata se agregan al mismo pipeline LSDP existente del Incremento 
 | Parametro | Valor (ejemplo) |
 |-----------|----------------|
 | catalogoParametro | control |
-| esquemaParametro | regional |
+| esquemaParametro | lab1 |
 | tablaParametros | Parametros |
 
-**Catalogo y esquema destino de plata**: El pipeline LSDP se configura con el catalogo por defecto `bronce` y esquema `regional`. Las vistas materializadas de plata se crean en `plata.regional` — LSDP permite crear tablas/vistas en catalogos diferentes al por defecto.
+**Catalogo y esquema destino de plata**: El pipeline LSDP se configura con el catalogo por defecto `bronce` y esquema `lab1`. Las vistas materializadas de plata se crean en `plata.lab1` — LSDP permite crear tablas/vistas en catalogos diferentes al por defecto.
 
 ## Flujo de Desarrollo
 
@@ -69,7 +69,7 @@ Si se crean utilidades nuevas en `utilities/`, implementar pruebas en `NbTddPlat
 1. Agregar los scripts de plata al pipeline LSDP.
 2. Ejecutar el pipeline desde Databricks.
 3. Validar:
-   - Las vistas materializadas existen en `plata.regional`.
+   - Las vistas materializadas existen en `plata.lab1`.
    - Ninguna columna duplicada en `clientes_saldos_consolidados`.
    - Columnas excluidas (`_rescued_data`, `FechaIngestaDatos`, etc.) no presentes.
    - Campos calculados con valores correctos.
@@ -81,39 +81,39 @@ Si se crean utilidades nuevas en `utilities/`, implementar pruebas en `NbTddPlat
 
 ```sql
 -- Verificar existencia de vistas
-SHOW TABLES IN plata.regional;
+SHOW TABLES IN plata.lab1;
 
 -- Verificar columnas de clientes_saldos_consolidados (no debe haber CUSTID duplicado, FechaIngestaDatos, _rescued_data)
-DESCRIBE plata.regional.clientes_saldos_consolidados;
+DESCRIBE plata.lab1.clientes_saldos_consolidados;
 
 -- Verificar columnas de transacciones_enriquecidas
-DESCRIBE plata.regional.transacciones_enriquecidas;
+DESCRIBE plata.lab1.transacciones_enriquecidas;
 
 -- Verificar propiedades Delta
-SHOW TBLPROPERTIES plata.regional.clientes_saldos_consolidados;
-SHOW TBLPROPERTIES plata.regional.transacciones_enriquecidas;
+SHOW TBLPROPERTIES plata.lab1.clientes_saldos_consolidados;
+SHOW TBLPROPERTIES plata.lab1.transacciones_enriquecidas;
 
 -- Verificar campos calculados en consolidada
 SELECT identificador_cliente, clasificacion_riesgo_cliente, categoria_saldo_disponible,
        perfil_actividad_bancaria, huella_identificacion_cliente
-FROM plata.regional.clientes_saldos_consolidados
+FROM plata.lab1.clientes_saldos_consolidados
 LIMIT 5;
 
 -- Verificar campos calculados en transaccional
 SELECT identificador_transaccion, monto_neto_comisiones, porcentaje_comision_sobre_monto,
        variacion_saldo_transaccion, indicador_impacto_financiero
-FROM plata.regional.transacciones_enriquecidas
+FROM plata.lab1.transacciones_enriquecidas
 LIMIT 5;
 
 -- Verificar Dimension Tipo 1 (un solo registro por cliente)
 SELECT identificador_cliente, COUNT(*) AS registros
-FROM plata.regional.clientes_saldos_consolidados
+FROM plata.lab1.clientes_saldos_consolidados
 GROUP BY identificador_cliente
 HAVING registros > 1;
 -- Resultado esperado: 0 filas
 
 -- Verificar LEFT JOIN (clientes sin saldos tienen columnas de saldos en NULL)
 SELECT COUNT(*) AS clientes_sin_saldo
-FROM plata.regional.clientes_saldos_consolidados
+FROM plata.lab1.clientes_saldos_consolidados
 WHERE saldo_disponible IS NULL;
 ```

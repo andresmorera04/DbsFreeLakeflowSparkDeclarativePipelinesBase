@@ -5,7 +5,7 @@
 
 ## Prerequisitos
 
-1. **Incremento 1 completado**: Tabla `Parametros` creada en Unity Catalog con los 11 registros de configuracion. Catalogos `bronce`, `control`, `plata`, `oro` y esquemas `regional` existentes. Volume `datos_bronce` creado.
+1. **Incremento 1 completado**: Tabla `Parametros` creada en Unity Catalog con los 11 registros de configuracion. Catalogos `bronce`, `control`, `plata`, `oro` y esquemas `lab1` existentes. Volume `datos_bronce` creado.
 
 2. **Incremento 2 completado**: Parquets AS400 (CMSTFL, TRXPFL, BLNCFL) generados y disponibles en la ruta configurada (Volume o S3).
 
@@ -54,7 +54,7 @@ Las pruebas TDD validan EXCLUSIVAMENTE las utilidades de `utilities/` (Python pu
    - **Pipeline mode**: `Triggered`
    - **Compute**: Serverless
    - **Catalog**: `bronce`
-   - **Target schema**: `regional`
+   - **Target schema**: `lab1`
 3. Agregar los archivos fuente:
    - `src/LSDP_Laboratorio_Basico/utilities/LsdpConexionParametros.py`
    - `src/LSDP_Laboratorio_Basico/utilities/LsdpConstructorRutas.py`
@@ -67,7 +67,7 @@ Las pruebas TDD validan EXCLUSIVAMENTE las utilidades de `utilities/` (Python pu
 | Parametro | Valor ejemplo |
 |-----------|---------------|
 | catalogoParametro | `control` |
-| esquemaParametro | `regional` |
+| esquemaParametro | `lab1` |
 | tablaParametros | `Parametros` |
 | rutaCompletaMaestroCliente | `LSDP_Base/As400/MaestroCliente/` |
 | rutaCompletaTransaccional | `LSDP_Base/As400/Transaccional/` |
@@ -92,32 +92,32 @@ Las pruebas TDD validan EXCLUSIVAMENTE las utilidades de `utilities/` (Python pu
 
 ```sql
 -- Verificar existencia de las tres streaming tables
-SHOW TABLES IN bronce.regional;
+SHOW TABLES IN bronce.lab1;
 
 -- Verificar conteo de registros
-SELECT COUNT(*) FROM bronce.regional.cmstfl;
-SELECT COUNT(*) FROM bronce.regional.trxpfl;
-SELECT COUNT(*) FROM bronce.regional.blncfl;
+SELECT COUNT(*) FROM bronce.lab1.cmstfl;
+SELECT COUNT(*) FROM bronce.lab1.trxpfl;
+SELECT COUNT(*) FROM bronce.lab1.blncfl;
 ```
 
 ### Verificar esquema y orden de columnas
 
 ```sql
 -- Verificar que FechaIngestaDatos y CUSTID son las primeras columnas de cmstfl
-DESCRIBE bronce.regional.cmstfl;
+DESCRIBE bronce.lab1.cmstfl;
 
 -- Verificar que TRXDT, CUSTID, TRXTYP son las primeras columnas de trxpfl
-DESCRIBE bronce.regional.trxpfl;
+DESCRIBE bronce.lab1.trxpfl;
 
 -- Verificar que FechaIngestaDatos y CUSTID son las primeras columnas de blncfl
-DESCRIBE bronce.regional.blncfl;
+DESCRIBE bronce.lab1.blncfl;
 ```
 
 ### Verificar propiedades Delta
 
 ```sql
 -- Verificar propiedades de cmstfl
-SHOW TBLPROPERTIES bronce.regional.cmstfl;
+SHOW TBLPROPERTIES bronce.lab1.cmstfl;
 
 -- Deben aparecer:
 -- delta.enableChangeDataFeed = true

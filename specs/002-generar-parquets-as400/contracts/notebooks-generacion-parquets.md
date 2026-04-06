@@ -9,7 +9,7 @@
 | Widget | Tipo | Defecto | Obligatorio | Descripcion |
 |--------|------|---------|-------------|-------------|
 | catalogoParametro | text | "control" | Si | Catalogo UC de la tabla Parametros |
-| esquemaParametro | text | "regional" | Si | Esquema UC de la tabla Parametros |
+| esquemaParametro | text | "lab1" | Si | Esquema UC de la tabla Parametros |
 | tablaParametros | text | "Parametros" | Si | Nombre de la tabla de parametros |
 | cantidadClientes | text | "50000" | Si | Cantidad base de registros a generar |
 | rutaRelativaMaestroCliente | text | "LSDP_Base/As400/MaestroCliente/" | Si | Ruta relativa del parquet dentro del storage |
@@ -71,7 +71,7 @@
 | Widget | Tipo | Defecto | Obligatorio | Descripcion |
 |--------|------|---------|-------------|-------------|
 | catalogoParametro | text | "control" | Si | Catalogo UC de la tabla Parametros |
-| esquemaParametro | text | "regional" | Si | Esquema UC de la tabla Parametros |
+| esquemaParametro | text | "lab1" | Si | Esquema UC de la tabla Parametros |
 | tablaParametros | text | "Parametros" | Si | Nombre de la tabla de parametros |
 | cantidadTransacciones | text | "150000" | Si | Cantidad de transacciones a generar |
 | fechaTransaccion | text | (sin defecto) | Si | Fecha de las transacciones formato YYYY-MM-DD |
@@ -138,7 +138,7 @@
 | Widget | Tipo | Defecto | Obligatorio | Descripcion |
 |--------|------|---------|-------------|-------------|
 | catalogoParametro | text | "control" | Si | Catalogo UC de la tabla Parametros |
-| esquemaParametro | text | "regional" | Si | Esquema UC de la tabla Parametros |
+| esquemaParametro | text | "lab1" | Si | Esquema UC de la tabla Parametros |
 | tablaParametros | text | "Parametros" | Si | Nombre de la tabla de parametros |
 | rutaRelativaSaldoCliente | text | "LSDP_Base/As400/SaldoCliente/" | Si | Ruta relativa del parquet de saldos |
 | rutaRelativaMaestroCliente | text | "LSDP_Base/As400/MaestroCliente/" | Si | Ruta para leer el Maestro de Clientes existente |
@@ -200,7 +200,7 @@
 | Widget | Tipo | Defecto | Obligatorio | Descripcion |
 |--------|------|---------|-------------|-------------|
 | catalogoParametro | text | "control" | Si | Catalogo UC de la tabla Parametros |
-| esquemaParametro | text | "regional" | Si | Esquema UC de la tabla Parametros |
+| esquemaParametro | text | "lab1" | Si | Esquema UC de la tabla Parametros |
 | tablaParametros | text | "Parametros" | Si | Nombre de la tabla de parametros |
 | rutaRelativaMaestroCliente | text | "LSDP_Base/As400/MaestroCliente/" | Si | Ruta del parquet CMSTFL |
 | rutaRelativaTransaccional | text | "LSDP_Base/As400/Transaccional/" | Si | Ruta del parquet TRXPFL |

@@ -39,7 +39,7 @@ from pyspark.sql.types import StringType, LongType, DoubleType, DateType, Timest
 # ==============================================================================
 
 dbutils.widgets.text("catalogoParametro",          "control",                         "Catalogo de la tabla Parametros")
-dbutils.widgets.text("esquemaParametro",           "regional",                        "Esquema de la tabla Parametros")
+dbutils.widgets.text("esquemaParametro",           "lab1",                        "Esquema de la tabla Parametros")
 dbutils.widgets.text("tablaParametros",            "Parametros",                      "Nombre de la tabla Parametros")
 dbutils.widgets.text("rutaRelativaMaestroCliente", "LSDP_Base/As400/MaestroCliente/", "Ruta relativa del parquet CMSTFL")
 dbutils.widgets.text("rutaRelativaTransaccional",  "LSDP_Base/As400/Transaccional/",  "Ruta relativa del parquet TRXPFL")

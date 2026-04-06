@@ -13,7 +13,7 @@
 - P: El notebook debe crear automaticamente los catalogos y esquemas o se asume que ya existen? → R: El notebook crea automaticamente todos los catalogos y esquemas necesarios con `IF NOT EXISTS` antes de crear la tabla y el Volume.
 - P: Donde se documentan los hallazgos y decisiones de la investigacion inicial? → R: Directamente en SYSTEM.md, enriqueciendo las secciones existentes o agregando una seccion de decisiones, manteniendo la base de verdad centralizada.
 - P: Como recibe el notebook de configuracion inicial sus parametros de entrada? → R: Mediante `dbutils.widgets` con valores por defecto, mecanismo nativo y estandar de Databricks compatible con UI interactiva y la extension de VS Code.
-- P: Todos los catalogos comparten el mismo esquema o cada uno tiene esquema independiente? → R: Cada catalogo tiene su propio parametro de esquema (`esquemaBronce`, `esquemaPlata`, `esquemaOro`, `esquemaControl`), todos con valor por defecto `regional`, permitiendo flexibilidad futura.
+- P: Todos los catalogos comparten el mismo esquema o cada uno tiene esquema independiente? → R: Cada catalogo tiene su propio parametro de esquema (`esquemaBronce`, `esquemaPlata`, `esquemaOro`, `esquemaControl`), todos con valor por defecto `lab1`, permitiendo flexibilidad futura.
 
 ## Escenarios de Usuario y Pruebas *(obligatorio)*
 
@@ -115,7 +115,7 @@ Como Ingeniero de Datos, necesito que durante la configuracion inicial se cree a
 
 - El usuario ya tiene un workspace de Databricks Free Edition creado y accesible.
 - Unity Catalog esta habilitado en el workspace de Databricks Free Edition.
-- Los catalogos (`control`, `bronce`, `plata`, `oro`) y sus respectivos esquemas (parametrizados como `esquemaControl`, `esquemaBronce`, `esquemaPlata`, `esquemaOro`, todos con valor por defecto `regional`) seran creados automaticamente por el notebook de configuracion inicial con `IF NOT EXISTS`. No se requiere intervencion manual previa del usuario para crear estos recursos.
+- Los catalogos (`control`, `bronce`, `plata`, `oro`) y sus respectivos esquemas (parametrizados como `esquemaControl`, `esquemaBronce`, `esquemaPlata`, `esquemaOro`, todos con valor por defecto `lab1`) seran creados automaticamente por el notebook de configuracion inicial con `IF NOT EXISTS`. No se requiere intervencion manual previa del usuario para crear estos recursos.
 - El computo Serverless esta disponible en el workspace de Databricks Free Edition.
 - Visual Studio Code esta instalado en la maquina del usuario con acceso a internet para la instalacion de extensiones.
 - Este incremento esta excluido del requisito de TDD (pruebas Test-Driven Development), segun lo establecido en las politicas del proyecto.
