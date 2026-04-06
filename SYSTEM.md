@@ -339,7 +339,13 @@ comportamientos aislados y sin correlacion.
     3 Streaming Tables Bronce, 2 Vistas Materializadas Plata, 2 Vistas Materializadas Oro),
     incluyendo campos, tipos de datos, descripciones, logica de campos calculados y diagrama
     de linaje.
-  - Actualización del archivo README.md con formato profesional (como lo hacen las grandes empresas en la punta de la tecnologia como Netflix, Spotify, Uber, Microsoft o Amazon) resaltando todos los elementos relevantes del proyecto, haciendo referencia al ManualTecnico.md, al ModeladoDatos.md y al SYSTEM.md, resaltando que el desarrollo de este laboratorio es con IA Asistido usando github copilot y el framework spec-kit.
+  
+  Adicionalmente se debe realizar una Actualización del archivo README.md con formato profesional (como lo hacen las grandes empresas en la punta de la tecnologia como Netflix, Spotify, Uber, Microsoft o Amazon) resaltando todos los elementos relevantes del proyecto, haciendo referencia al ManualTecnico.md, al ModeladoDatos.md y al SYSTEM.md, resaltando que el desarrollo de este laboratorio es con IA Asistido usando github copilot y el framework spec-kit.
+
+  Además, se debe de sustituir la palabra "regional" por "lab1" usado como valor por defecto para los esquemas del Unity Catalog, esto aplica para todo el spec de este proyecto y del código desarrollado (Validar todos los .py y notebooks).
+
+  Por ultimo, este Incremento 6 debe generar una nueva carpeta en la raíz del repositorio llamada demo/ y dentro de esta carpeta crear un archivo llamado "ConfiguracionIncial.md" el cual debe tener un template del paso a paso de como este laboratorio se importa en Databricks Free Edition.
+  
 - Nota Importante: Excluyendo el incremento 1, todas las demas versiones deben de tener su set
   de pruebas basado en Test-Driven Development (TDD).
 

@@ -2,7 +2,7 @@
 # MAGIC %md
 # MAGIC # LsdpBronceTrxpfl
 # MAGIC
-# MAGIC Script LSDP que define la streaming table `trxpfl` en `bronce.regional`.
+# MAGIC Script LSDP que define la streaming table `trxpfl` en `bronce.lab1`.
 # MAGIC Ingesta incremental del parquet Transaccional AS400 via AutoLoader
 # MAGIC con schema evolution activo, liquid cluster y propiedades Delta optimizadas.
 # MAGIC
@@ -81,7 +81,7 @@ def transformar_trxpfl(df: DataFrame) -> DataFrame:
         DataFrame con TRXDT en posicion 1, CUSTID en posicion 2, TRXTYP en posicion 3,
         FechaIngestaDatos en posicion 4 y el resto de columnas en su orden original.
     """
-    print(f"[LsdpBronceTrxpfl] transformar_trxpfl — tabla destino: bronce.regional.trxpfl")
+    print(f"[LsdpBronceTrxpfl] transformar_trxpfl — tabla destino: bronce.lab1.trxpfl")
     print(f"[LsdpBronceTrxpfl] Campos del liquid cluster: {campos_cluster_trxpfl}")
 
     df_con_timestamp = df.withColumn("FechaIngestaDatos", F.current_timestamp())
@@ -94,7 +94,7 @@ def transformar_trxpfl(df: DataFrame) -> DataFrame:
 # MAGIC %md
 # MAGIC ## Streaming table trxpfl — Decorador @dp.table
 # MAGIC
-# MAGIC Define la streaming table en bronce.regional con AutoLoader, schema evolution,
+# MAGIC Define la streaming table en bronce.lab1 con AutoLoader, schema evolution,
 # MAGIC liquid cluster y propiedades Delta optimizadas.
 
 # COMMAND ----------

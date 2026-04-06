@@ -2,7 +2,7 @@
 # MAGIC %md
 # MAGIC # LsdpBronceCmstfl
 # MAGIC
-# MAGIC Script LSDP que define la streaming table `cmstfl` en `bronce.regional`.
+# MAGIC Script LSDP que define la streaming table `cmstfl` en `bronce.lab1`.
 # MAGIC Ingesta incremental del parquet Maestro de Clientes AS400 via AutoLoader
 # MAGIC con schema evolution activo, liquid cluster y propiedades Delta optimizadas.
 # MAGIC
@@ -78,7 +78,7 @@ def transformar_cmstfl(df: DataFrame) -> DataFrame:
         DataFrame con FechaIngestaDatos en posicion 1, CUSTID en posicion 2
         y el resto de columnas en su orden original.
     """
-    print(f"[LsdpBronceCmstfl] transformar_cmstfl — tabla destino: bronce.regional.cmstfl")
+    print(f"[LsdpBronceCmstfl] transformar_cmstfl — tabla destino: bronce.lab1.cmstfl")
     print(f"[LsdpBronceCmstfl] Campos del liquid cluster: {campos_cluster_cmstfl}")
 
     df_con_timestamp = df.withColumn("FechaIngestaDatos", F.current_timestamp())
@@ -91,7 +91,7 @@ def transformar_cmstfl(df: DataFrame) -> DataFrame:
 # MAGIC %md
 # MAGIC ## Streaming table cmstfl — Decorador @dp.table
 # MAGIC
-# MAGIC Define la streaming table en bronce.regional con AutoLoader, schema evolution,
+# MAGIC Define la streaming table en bronce.lab1 con AutoLoader, schema evolution,
 # MAGIC liquid cluster y propiedades Delta optimizadas.
 
 # COMMAND ----------

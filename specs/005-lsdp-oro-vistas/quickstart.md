@@ -8,12 +8,12 @@
 1. **Incrementos anteriores completados**:
    - Inc. 1: Tabla Parametros creada en Unity Catalog con todas las claves, incluyendo `catalogoOro`, `esquemaOro`, `catalogoPlata`, `esquemaPlata`.
    - Inc. 2: Parquets AS400 generados (CMSTFL, TRXPFL, BLNCFL).
-   - Inc. 3: Pipeline LSDP con medalla de bronce funcional. Streaming tables `bronce.regional.cmstfl`, `bronce.regional.trxpfl`, `bronce.regional.blncfl` pobladas.
-   - Inc. 4: Vistas materializadas de plata funcionales. `plata.regional.clientes_saldos_consolidados` y `plata.regional.transacciones_enriquecidas` pobladas.
+   - Inc. 3: Pipeline LSDP con medalla de bronce funcional. Streaming tables `bronce.lab1.cmstfl`, `bronce.lab1.trxpfl`, `bronce.lab1.blncfl` pobladas.
+   - Inc. 4: Vistas materializadas de plata funcionales. `plata.lab1.clientes_saldos_consolidados` y `plata.lab1.transacciones_enriquecidas` pobladas.
 
 2. **Entorno Databricks**:
    - Databricks Free Edition con Serverless Compute disponible.
-   - Catalogos `oro` y esquema `regional` creados por `conf/NbConfiguracionInicial.py`.
+   - Catalogos `oro` y esquema `lab1` creados por `conf/NbConfiguracionInicial.py`.
    - Extension Databricks para VS Code configurada y conectada al workspace.
 
 3. **Tabla Parametros con claves requeridas**:
@@ -21,9 +21,9 @@
 | Clave | Valor esperado |
 |-------|---------------|
 | catalogoOro | oro |
-| esquemaOro | regional |
+| esquemaOro | lab1 |
 | catalogoPlata | plata |
-| esquemaPlata | regional |
+| esquemaPlata | lab1 |
 | TiposTransaccionesLabBase | DATM,CATM,PGSL |
 
 ## Estructura de Archivos Nuevos
@@ -45,18 +45,18 @@ El script de oro se agrega al mismo pipeline LSDP existente de los Incrementos 3
 | Parametro | Valor (ejemplo) |
 |-----------|----------------|
 | catalogoParametro | control |
-| esquemaParametro | regional |
+| esquemaParametro | lab1 |
 | tablaParametros | Parametros |
 
-**Catalogo y esquema destino de oro**: El pipeline LSDP se configura con el catalogo por defecto `bronce` y esquema `regional`. Las vistas materializadas de oro se crean en `oro.regional` usando los parametros `catalog` y `schema` del decorador `@dp.materialized_view`.
+**Catalogo y esquema destino de oro**: El pipeline LSDP se configura con el catalogo por defecto `bronce` y esquema `lab1`. Las vistas materializadas de oro se crean en `oro.lab1` usando los parametros `catalog` y `schema` del decorador `@dp.materialized_view`.
 
 ## Flujo de Desarrollo
 
 ### Paso 1 — Verificar prerequisitos de plata
 
 Ejecutar el pipeline LSDP existente y confirmar que las 2 vistas materializadas de plata contienen datos:
-- `plata.regional.clientes_saldos_consolidados`
-- `plata.regional.transacciones_enriquecidas`
+- `plata.lab1.clientes_saldos_consolidados`
+- `plata.lab1.transacciones_enriquecidas`
 
 ### Paso 2 — Implementar LsdpInsertarTiposTransaccion.py
 
@@ -101,7 +101,7 @@ Agregar `LsdpOroClientes.py` como source file en la configuracion del pipeline L
 Ejecutar el pipeline LSDP completo (bronce + plata + oro) y verificar:
 - Las 3 streaming tables de bronce se actualizan correctamente.
 - Las 2 vistas materializadas de plata se actualizan correctamente.
-- Las 2 vistas materializadas de oro se crean en `oro.regional`.
+- Las 2 vistas materializadas de oro se crean en `oro.lab1`.
 - `comportamiento_atm_cliente` tiene 6 columnas con metricas correctas.
 - `resumen_integral_cliente` tiene 22 columnas con INNER JOIN correcto.
 - Los logs muestran todos los prints de observabilidad.
@@ -116,24 +116,24 @@ Despues de la ejecucion exitosa del pipeline, ejecutar las siguientes consultas 
 
 ```sql
 -- Verificar comportamiento_atm_cliente
-SELECT COUNT(*) as total_clientes FROM oro.regional.comportamiento_atm_cliente;
+SELECT COUNT(*) as total_clientes FROM oro.lab1.comportamiento_atm_cliente;
 
 -- Verificar metricas no nulas
-SELECT * FROM oro.regional.comportamiento_atm_cliente
+SELECT * FROM oro.lab1.comportamiento_atm_cliente
 WHERE cantidad_depositos_atm IS NULL OR cantidad_retiros_atm IS NULL
 LIMIT 5;
 -- Esperado: 0 filas (todas las metricas deben ser 0, no NULL)
 
 -- Verificar resumen_integral_cliente (solo clientes con actividad transaccional)
-SELECT COUNT(*) as total_clientes FROM oro.regional.resumen_integral_cliente;
+SELECT COUNT(*) as total_clientes FROM oro.lab1.resumen_integral_cliente;
 
 -- Verificar 22 columnas
-DESCRIBE oro.regional.resumen_integral_cliente;
+DESCRIBE oro.lab1.resumen_integral_cliente;
 
 -- Verificar INNER JOIN correcto (todos los clientes deben tener contraparte en comportamiento)
 SELECT r.identificador_cliente
-FROM oro.regional.resumen_integral_cliente r
-LEFT JOIN oro.regional.comportamiento_atm_cliente c
+FROM oro.lab1.resumen_integral_cliente r
+LEFT JOIN oro.lab1.comportamiento_atm_cliente c
   ON r.identificador_cliente = c.identificador_cliente
 WHERE c.identificador_cliente IS NULL
 LIMIT 5;

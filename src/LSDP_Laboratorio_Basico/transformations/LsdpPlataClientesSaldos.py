@@ -3,7 +3,7 @@
 # MAGIC # LsdpPlataClientesSaldos
 # MAGIC
 # MAGIC Script LSDP que define la vista materializada `clientes_saldos_consolidados`
-# MAGIC en `plata.regional`.
+# MAGIC en `plata.lab1`.
 # MAGIC
 # MAGIC Consolida las streaming tables de bronce `cmstfl` (Maestro de Clientes) y
 # MAGIC `blncfl` (Saldos de Clientes) mediante LEFT JOIN por CUSTID con estrategia
@@ -54,7 +54,7 @@ diccionario_parametros = obtener_parametros(
 
 # --- Extraccion de catalogos y esquemas de plata ---
 catalogo_plata = diccionario_parametros.get("catalogoPlata", "plata")
-esquema_plata  = diccionario_parametros.get("esquemaPlata",  "regional")
+esquema_plata  = diccionario_parametros.get("esquemaPlata",  "lab1")
 
 print(f"[LsdpPlataClientesSaldos] Catalogo plata destino : {catalogo_plata}")
 print(f"[LsdpPlataClientesSaldos] Esquema plata destino  : {esquema_plata}")

@@ -121,7 +121,7 @@ def prueba_conexion_retorna_diccionario():
         ("contenedorBronce", "datos_bronce"),
         ("TipoStorage", "Volume"),
         ("catalogoVolume", "bronce"),
-        ("esquemaVolume", "regional"),
+        ("esquemaVolume", "lab1"),
         ("nombreVolume", "datos_bronce"),
         ("bucketS3", "mi-bucket"),
         ("prefijoS3", "lsdp"),
@@ -174,7 +174,7 @@ from LsdpConstructorRutas import construir_ruta
 diccionario_prueba_volume = {
     "TipoStorage": "Volume",
     "catalogoVolume": "bronce",
-    "esquemaVolume": "regional",
+    "esquemaVolume": "lab1",
     "nombreVolume": "datos_bronce",
     "bucketS3": "mi-bucket",
     "prefijoS3": "lsdp",
@@ -183,7 +183,7 @@ diccionario_prueba_volume = {
 diccionario_prueba_s3 = {
     "TipoStorage": "AmazonS3",
     "catalogoVolume": "bronce",
-    "esquemaVolume": "regional",
+    "esquemaVolume": "lab1",
     "nombreVolume": "datos_bronce",
     "bucketS3": "mi-bucket",
     "prefijoS3": "lsdp",
@@ -195,7 +195,7 @@ ruta_relativa_prueba = "LSDP_Base/As400/CMSTFL/"
 def prueba_ruta_volume():
     """Construye ruta correcta para TipoStorage=Volume."""
     ruta = construir_ruta(diccionario_prueba_volume, ruta_relativa_prueba)
-    esperada = "/Volumes/bronce/regional/datos_bronce/LSDP_Base/As400/CMSTFL/"
+    esperada = "/Volumes/bronce/lab1/datos_bronce/LSDP_Base/As400/CMSTFL/"
     afirmar(ruta == esperada, f"Ruta Volume correcta: {ruta}")
     afirmar(ruta.startswith("/Volumes/"), "Ruta Volume inicia con /Volumes/")
 

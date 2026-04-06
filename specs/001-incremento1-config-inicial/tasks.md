@@ -42,7 +42,7 @@
 
 **Objetivo**: Implementar el notebook de configuracion inicial que crea catalogos, esquemas, la tabla Parametros con 15 registros y observabilidad completa.
 
-**Prueba Independiente**: Ejecutar `conf/NbConfiguracionInicial.py` en Databricks Free Edition y verificar con `SELECT * FROM control.regional.Parametros ORDER BY Clave` que retorna 15 filas. Re-ejecutar 3 veces y confirmar idempotencia (CE-001, CE-002, CE-003).
+**Prueba Independiente**: Ejecutar `conf/NbConfiguracionInicial.py` en Databricks Free Edition y verificar con `SELECT * FROM control.lab1.Parametros ORDER BY Clave` que retorna 15 filas. Re-ejecutar 3 veces y confirmar idempotencia (CE-001, CE-002, CE-003).
 
 ### Implementacion para US2
 

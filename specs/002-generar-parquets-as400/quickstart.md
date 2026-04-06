@@ -6,9 +6,9 @@
 
 1. **Incremento 1 completado**: El notebook `conf/NbConfiguracionInicial.py` debe haberse ejecutado exitosamente, creando:
    - Catalogos: `control`, `bronce`, `plata`, `oro`
-   - Esquemas: `regional` en cada catalogo
-   - Tabla: `control.regional.Parametros` (15 registros)
-   - Volume: `bronce.regional.datos_bronce`
+   - Esquemas: `lab1` en cada catalogo
+   - Tabla: `control.lab1.Parametros` (15 registros)
+   - Volume: `bronce.lab1.datos_bronce`
 
 2. **Workspace de Databricks Free Edition** activo con Unity Catalog habilitado y Serverless Compute disponible.
 
@@ -41,7 +41,7 @@ Los notebooks 2 y 3 pueden ejecutarse en cualquier orden entre si, pero ambos de
 | Widget | Defecto |
 |--------|---------|
 | catalogoParametro | control |
-| esquemaParametro | regional |
+| esquemaParametro | lab1 |
 | tablaParametros | Parametros |
 | cantidadClientes | 50000 |
 | rutaRelativaMaestroCliente | LSDP_Base/As400/MaestroCliente/ |
@@ -51,7 +51,7 @@ Los notebooks 2 y 3 pueden ejecutarse en cualquier orden entre si, pero ambos de
 **Ejecucion**: Abrir el notebook en VS Code, conectar a Serverless, ejecutar todas las celdas.
 
 **Resultado esperado**:
-- Parquet con 50,000 registros y 70 columnas en `/Volumes/bronce/regional/datos_bronce/LSDP_Base/As400/MaestroCliente/`
+- Parquet con 50,000 registros y 70 columnas en `/Volumes/bronce/lab1/datos_bronce/LSDP_Base/As400/MaestroCliente/`
 - Resumen impreso en consola con parametros, ruta y metricas
 
 ### Paso 2: Generar Transaccional de Clientes
@@ -62,7 +62,7 @@ Los notebooks 2 y 3 pueden ejecutarse en cualquier orden entre si, pero ambos de
 | Widget | Defecto |
 |--------|---------|
 | catalogoParametro | control |
-| esquemaParametro | regional |
+| esquemaParametro | lab1 |
 | tablaParametros | Parametros |
 | cantidadTransacciones | 150000 |
 | fechaTransaccion | (obligatorio, ej: 2026-04-03) |
@@ -76,7 +76,7 @@ Los notebooks 2 y 3 pueden ejecutarse en cualquier orden entre si, pero ambos de
 **Nota**: El parametro `rutaRelativaMaestroCliente` puede apuntar a una carpeta padre (ej: `archivos/LSDP_Base/As400/CMSTFL`) que contenga multiples particiones por dia. El notebook lee recursivamente todos los parquets y extrae CUSTIDs unicos via `.distinct()`.
 
 **Resultado esperado**:
-- Parquet con 150,000 registros y 60 columnas en `/Volumes/bronce/regional/datos_bronce/LSDP_Base/As400/Transaccional/`
+- Parquet con 150,000 registros y 60 columnas en `/Volumes/bronce/lab1/datos_bronce/LSDP_Base/As400/Transaccional/`
 
 ### Paso 3: Generar Saldos de Clientes
 
@@ -86,7 +86,7 @@ Los notebooks 2 y 3 pueden ejecutarse en cualquier orden entre si, pero ambos de
 | Widget | Defecto |
 |--------|---------|
 | catalogoParametro | control |
-| esquemaParametro | regional |
+| esquemaParametro | lab1 |
 | tablaParametros | Parametros |
 | rutaRelativaSaldoCliente | LSDP_Base/As400/SaldoCliente/ |
 | rutaRelativaMaestroCliente | LSDP_Base/As400/MaestroCliente/ |
@@ -96,7 +96,7 @@ Los notebooks 2 y 3 pueden ejecutarse en cualquier orden entre si, pero ambos de
 **Nota**: El parametro `rutaRelativaMaestroCliente` puede apuntar a una carpeta padre (ej: `archivos/LSDP_Base/As400/CMSTFL`) que contenga multiples particiones por dia. El notebook lee recursivamente todos los parquets y extrae CUSTIDs unicos via `.distinct()`, generando exactamente 1 saldo por cada CUSTID unico.
 
 **Resultado esperado**:
-- Parquet con 50,000 registros (1:1 con CUSTIDs unicos de CMSTFL) y 100 columnas en `/Volumes/bronce/regional/datos_bronce/LSDP_Base/As400/SaldoCliente/`
+- Parquet con 50,000 registros (1:1 con CUSTIDs unicos de CMSTFL) y 100 columnas en `/Volumes/bronce/lab1/datos_bronce/LSDP_Base/As400/SaldoCliente/`
 
 ### Paso 4: Ejecutar Pruebas TDD
 

@@ -47,7 +47,7 @@ from pyspark.sql.types import (
 # ==============================================================================
 
 dbutils.widgets.text("catalogoParametro",           "control",        "Catalogo de la tabla Parametros")
-dbutils.widgets.text("esquemaParametro",            "regional",       "Esquema de la tabla Parametros")
+dbutils.widgets.text("esquemaParametro",            "lab1",       "Esquema de la tabla Parametros")
 dbutils.widgets.text("tablaParametros",             "Parametros",     "Nombre de la tabla Parametros")
 dbutils.widgets.text("cantidadClientes",            "50000",          "Cantidad de clientes a generar")
 dbutils.widgets.text("rutaRelativaMaestroCliente",  "LSDP_Base/As400/MaestroCliente/", "Ruta relativa destino del parquet")

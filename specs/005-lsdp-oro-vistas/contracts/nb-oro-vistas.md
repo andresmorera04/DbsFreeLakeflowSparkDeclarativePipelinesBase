@@ -21,7 +21,7 @@ Este contrato define la interfaz publica del script de transformacion de oro que
 | Parametro | Tipo | Fuente | Ejemplo |
 |-----------|------|--------|---------|
 | catalogoParametro | string | `spark.conf.get("pipelines.parameters.catalogoParametro")` | control |
-| esquemaParametro | string | `spark.conf.get("pipelines.parameters.esquemaParametro")` | regional |
+| esquemaParametro | string | `spark.conf.get("pipelines.parameters.esquemaParametro")` | lab1 |
 | tablaParametros | string | `spark.conf.get("pipelines.parameters.tablaParametros")` | Parametros |
 
 ### Claves de Tabla Parametros Requeridas
@@ -29,9 +29,9 @@ Este contrato define la interfaz publica del script de transformacion de oro que
 | Clave | Tipo | Ejemplo | Valor por defecto | Uso |
 |-------|------|---------|-------------------|-----|
 | catalogoOro | string | oro | oro | Catalogo UC destino para las vistas materializadas de oro |
-| esquemaOro | string | regional | regional | Esquema UC destino para las vistas materializadas de oro |
+| esquemaOro | string | lab1 | lab1 | Esquema UC destino para las vistas materializadas de oro |
 | catalogoPlata | string | plata | plata | Catalogo UC para leer vistas materializadas de plata |
-| esquemaPlata | string | regional | regional | Esquema UC para leer vistas materializadas de plata |
+| esquemaPlata | string | lab1 | lab1 | Esquema UC para leer vistas materializadas de plata |
 | TiposTransaccionesLabBase | string | DATM,CATM,PGSL | DATM,CATM,PGSL | Tipos de transaccion separados por coma para metricas ATM |
 
 ### Dependencias (imports)
