@@ -87,7 +87,7 @@ df = (spark.range(cantidad_registros)
 **Decision**: Usar `spark.read.table()` directamente y convertir a diccionario Python.
 **Estado**: APROBADA por el usuario (2026-04-03)
 
-**Razonamiento**: La tabla Parametros fue creada en el Incremento 1 en `control.regional.Parametros` con columnas `Clave` (string) y `Valor` (string). Contiene 15 registros de configuracion. La lectura se realiza con:
+**Razonamiento**: La tabla Parametros fue creada en el Incremento 1 en `control.lab1.Parametros` con columnas `Clave` (string) y `Valor` (string). Contiene 15 registros de configuracion. La lectura se realiza con:
 
 ```python
 nombre_completo_tabla = f"{catalogo_parametro}.{esquema_parametro}.{tabla_parametros}"
@@ -174,11 +174,11 @@ ruta_completa = f"{ruta_base}/{ruta_relativa}"
 **Valores actuales de la tabla Parametros (Incremento 1)**:
 - TipoStorage = "Volume"
 - catalogoVolume = "bronce"
-- esquemaVolume = "regional"
+- esquemaVolume = "lab1"
 - nombreVolume = "datos_bronce"
 - bucketS3 = "" (vacio)
 
-Con Volume, la ruta base resultante es: `/Volumes/bronce/regional/datos_bronce`
+Con Volume, la ruta base resultante es: `/Volumes/bronce/lab1/datos_bronce`
 
 **Alternativas consideradas**:
 - Crear las utilidades LSDP anticipadamente: Descartado por decision del usuario para mantener los incrementos separados.

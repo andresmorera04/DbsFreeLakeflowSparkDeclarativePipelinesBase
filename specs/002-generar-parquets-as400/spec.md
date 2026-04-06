@@ -169,7 +169,7 @@ El ingeniero de datos necesita un conjunto de pruebas basadas en Test-Driven Dev
 | Parametro | Origen | Notebook(s) | Descripcion |
 | --------- | ------ | ----------- | ----------- |
 | catalogoParametro | dbutils.widgets (defecto: "control") | Los 3 | Catalogo de la tabla Parametros |
-| esquemaParametro | dbutils.widgets (defecto: "regional") | Los 3 | Esquema de la tabla Parametros |
+| esquemaParametro | dbutils.widgets (defecto: "lab1") | Los 3 | Esquema de la tabla Parametros |
 | tablaParametros | dbutils.widgets (defecto: "Parametros") | Los 3 | Nombre de la tabla Parametros |
 | cantidadClientes | dbutils.widgets (defecto: "50000") | CMSTFL | Cantidad base de registros de clientes |
 | cantidadTransacciones | dbutils.widgets (defecto: "150000") | TRXPFL | Cantidad de transacciones a generar |
@@ -212,7 +212,7 @@ El ingeniero de datos necesita un conjunto de pruebas basadas en Test-Driven Dev
 ## Supuestos
 
 - La tabla Parametros en Unity Catalog ya fue creada exitosamente por el Incremento 1 (`conf/NbConfiguracionInicial.py`) y contiene los 15 registros de configuracion definidos.
-- Los catalogos (`control`, `bronce`, `plata`, `oro`) y esquemas (`regional`) ya fueron creados por el Incremento 1.
+- Los catalogos (`control`, `bronce`, `plata`, `oro`) y esquemas (`lab1`) ya fueron creados por el Incremento 1.
 - El Volume gestionado (`datos_bronce`) ya fue creado por el Incremento 1 y esta accesible.
 - El workspace de Databricks Free Edition esta activo con Unity Catalog habilitado y Serverless Compute disponible.
 - Las extensiones Databricks Extension for Visual Studio Code y Databricks Driver for SQLTools estan correctamente instaladas y configuradas.

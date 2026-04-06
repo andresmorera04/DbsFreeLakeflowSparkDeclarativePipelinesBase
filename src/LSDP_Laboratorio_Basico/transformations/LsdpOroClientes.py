@@ -2,7 +2,7 @@
 # MAGIC %md
 # MAGIC # LsdpOroClientes
 # MAGIC
-# MAGIC Script LSDP que define las dos vistas materializadas de oro en `oro.regional`:
+# MAGIC Script LSDP que define las dos vistas materializadas de oro en `oro.lab1`:
 # MAGIC
 # MAGIC - `comportamiento_atm_cliente`: agrega transacciones de plata por cliente
 # MAGIC   usando agregacion condicional sin filtros previos. Calcula 5 metricas ATM
@@ -53,9 +53,9 @@ parametros = obtener_parametros(
 
 # --- Extraccion de catalogos y esquemas ---
 catalogo_oro   = parametros.get("catalogoOro",   "oro")
-esquema_oro    = parametros.get("esquemaOro",    "regional")
+esquema_oro    = parametros.get("esquemaOro",    "lab1")
 catalogo_plata = parametros.get("catalogoPlata", "plata")
-esquema_plata  = parametros.get("esquemaPlata",  "regional")
+esquema_plata  = parametros.get("esquemaPlata",  "lab1")
 
 print(f"[LsdpOroClientes] Catalogo oro    destino : {catalogo_oro}")
 print(f"[LsdpOroClientes] Esquema oro     destino : {esquema_oro}")

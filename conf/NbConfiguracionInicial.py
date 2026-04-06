@@ -37,7 +37,7 @@
 import time
 
 dbutils.widgets.text("catalogoParametro", "control",    "Catalogo de la tabla Parametros")
-dbutils.widgets.text("esquemaParametro",  "regional",   "Esquema de la tabla Parametros")
+dbutils.widgets.text("esquemaParametro",  "lab1",   "Esquema de la tabla Parametros")
 dbutils.widgets.text("tablaParametros",   "Parametros", "Nombre de la tabla Parametros")
 
 # Captura inmediata de valores de widgets en variables locales
@@ -123,20 +123,20 @@ print("=" * 70)
 # en la tabla Parametros. Los nombres de catalogos se derivan de aqui.
 registros_parametros = [
     ("catalogoBronce",   "bronce"),
-    ("esquemaBronce",    "regional"),
+    ("esquemaBronce",    "lab1"),
     ("contenedorBronce", "bronce"),
     ("TipoStorage",      "Volume"),
     ("catalogoVolume",   "bronce"),
-    ("esquemaVolume",    "regional"),
+    ("esquemaVolume",    "lab1"),
     ("nombreVolume",     "datos_bronce"),
     ("bucketS3",         ""),
     ("prefijoS3",        ""),
     ("DirectorioBronce", "archivos"),
     ("catalogoPlata",    "plata"),
-    ("esquemaPlata",     "regional"),
+    ("esquemaPlata",     "lab1"),
     ("catalogoOro",      "oro"),
-    ("esquemaOro",       "regional"),
-    ("esquemaControl",   "regional"),
+    ("esquemaOro",       "lab1"),
+    ("esquemaControl",   "lab1"),
 ]
 
 # Diccionario de configuracion inicial para consultas previas a la tabla
@@ -277,7 +277,7 @@ print(f"  nombreVolume    : {nombre_volume}")
 # catalogos correspondientes. IF NOT EXISTS garantiza idempotencia.
 #
 # Nota: El esquema de la tabla Parametros (catalogo_parametro.esquema_parametro)
-# puede coincidir con uno de estos (p.ej. control.regional). El IF NOT EXISTS
+# puede coincidir con uno de estos (p.ej. control.lab1). El IF NOT EXISTS
 # maneja esto correctamente sin errores ni duplicados.
 #
 # RF-013 (completa): esquemas medallion con IF NOT EXISTS

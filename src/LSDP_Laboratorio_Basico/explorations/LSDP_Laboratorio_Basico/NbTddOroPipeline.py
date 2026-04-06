@@ -88,13 +88,13 @@ def ejecutar_prueba(nombre: str, funcion_prueba):
 
 # Catalogo y esquema para la tabla de prueba.
 # Se leen de los parametros del pipeline si estan disponibles; de lo contrario
-# se usan valores por defecto de control.regional (donde reside la tabla Parametros).
+# se usan valores por defecto de control.lab1 (donde reside la tabla Parametros).
 try:
     catalogo_prueba = spark.conf.get("pipelines.parameters.catalogoParametro")
     esquema_prueba  = spark.conf.get("pipelines.parameters.esquemaParametro")
 except Exception:
     catalogo_prueba = "control"
-    esquema_prueba  = "regional"
+    esquema_prueba  = "lab1"
 
 tabla_prueba = "TddOroParametrosTiposTransaccion"
 nombre_completo_tabla_prueba = f"{catalogo_prueba}.{esquema_prueba}.{tabla_prueba}"

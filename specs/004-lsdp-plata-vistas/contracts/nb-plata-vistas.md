@@ -21,7 +21,7 @@ Este contrato define la interfaz publica de los dos scripts de transformacion de
 | Parametro | Tipo | Fuente | Ejemplo |
 |-----------|------|--------|---------|
 | catalogoParametro | string | `spark.conf.get("pipelines.parameters.catalogoParametro")` | control |
-| esquemaParametro | string | `spark.conf.get("pipelines.parameters.esquemaParametro")` | regional |
+| esquemaParametro | string | `spark.conf.get("pipelines.parameters.esquemaParametro")` | lab1 |
 | tablaParametros | string | `spark.conf.get("pipelines.parameters.tablaParametros")` | Parametros |
 
 ### Claves de Tabla Parametros Requeridas
@@ -29,7 +29,7 @@ Este contrato define la interfaz publica de los dos scripts de transformacion de
 | Clave | Tipo | Ejemplo | Uso |
 |-------|------|---------|-----|
 | catalogoPlata | string | plata | Catalogo UC destino para las vistas materializadas de plata |
-| esquemaPlata | string | regional | Esquema UC destino para las vistas materializadas de plata |
+| esquemaPlata | string | lab1 | Esquema UC destino para las vistas materializadas de plata |
 
 ### Dependencias (imports)
 
@@ -48,7 +48,7 @@ from utilities.LsdpReordenarColumnasLiquidCluster import reordenar_columnas_liqu
 |----------|-------|
 | Tipo | Vista materializada (`@dp.materialized_view`) |
 | Nombre | `clientes_saldos_consolidados` |
-| Catalogo/Esquema | `plata.regional` (gestionado por LSDP via configuracion del pipeline) |
+| Catalogo/Esquema | `plata.lab1` (gestionado por LSDP via configuracion del pipeline) |
 | Columnas | 173 (ver data-model.md para mapeo completo) |
 | Liquid Cluster | `huella_identificacion_cliente`, `identificador_cliente` |
 | Propiedades Delta | `delta.enableChangeDataFeed=true`, `delta.autoOptimize.autoCompact=true`, `delta.autoOptimize.optimizeWrite=true`, `delta.deletedFileRetentionDuration=interval 30 days`, `delta.logRetentionDuration=interval 60 days` |
@@ -123,7 +123,7 @@ from utilities.LsdpReordenarColumnasLiquidCluster import reordenar_columnas_liqu
 |----------|-------|
 | Tipo | Vista materializada (`@dp.materialized_view`) |
 | Nombre | `transacciones_enriquecidas` |
-| Catalogo/Esquema | `plata.regional` (gestionado por LSDP via configuracion del pipeline) |
+| Catalogo/Esquema | `plata.lab1` (gestionado por LSDP via configuracion del pipeline) |
 | Columnas | 64 (ver data-model.md para mapeo completo) |
 | Liquid Cluster | `fecha_transaccion`, `identificador_cliente`, `tipo_transaccion` |
 | Propiedades Delta | Identicas a `clientes_saldos_consolidados` |

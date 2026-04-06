@@ -5,7 +5,7 @@
 
 ## Entidades
 
-### 1. Streaming Table cmstfl (`bronce.regional.cmstfl`)
+### 1. Streaming Table cmstfl (`bronce.lab1.cmstfl`)
 
 **Descripcion**: Tabla streaming de bronce que acumula historicamente todos los registros del Maestro de Clientes AS400 ingresados via AutoLoader.
 **Cantidad de columnas**: 72 (70 originales del parquet CMSTFL + `FechaIngestaDatos` + `_rescued_data`)
@@ -38,7 +38,7 @@
 
 ---
 
-### 2. Streaming Table trxpfl (`bronce.regional.trxpfl`)
+### 2. Streaming Table trxpfl (`bronce.lab1.trxpfl`)
 
 **Descripcion**: Tabla streaming de bronce que acumula historicamente todas las transacciones AS400 ingresadas via AutoLoader.
 **Cantidad de columnas**: 62 (60 originales del parquet TRXPFL + `FechaIngestaDatos` + `_rescued_data`)
@@ -65,7 +65,7 @@
 
 ---
 
-### 3. Streaming Table blncfl (`bronce.regional.blncfl`)
+### 3. Streaming Table blncfl (`bronce.lab1.blncfl`)
 
 **Descripcion**: Tabla streaming de bronce que acumula historicamente todos los registros de saldos AS400 ingresados via AutoLoader.
 **Cantidad de columnas**: 102 (100 originales del parquet BLNCFL + `FechaIngestaDatos` + `_rescued_data`)
@@ -161,7 +161,7 @@
 ### 7. Tabla Parametros (existente — Incremento 1)
 
 **Descripcion**: Tabla Delta en Unity Catalog con la configuracion dinamica del proyecto.
-**Ubicacion**: `<catalogoParametro>.<esquemaParametro>.<tablaParametros>` (por defecto: `control.regional.Parametros`)
+**Ubicacion**: `<catalogoParametro>.<esquemaParametro>.<tablaParametros>` (por defecto: `control.lab1.Parametros`)
 **Columnas**: `Clave` (StringType), `Valor` (StringType)
 **Registros**: 11 claves de configuracion insertadas por `conf/NbConfiguracionInicial.py`
 **Relacion con Incremento 3**: Leida por `LsdpConexionParametros` al inicializar cada script de bronce.
@@ -181,7 +181,7 @@
           | schemaEvolution             | schemaEvolution             | schemaEvolution
           v                             v                             v
 +---------------------+       +---------------------+       +---------------------+
-|  bronce.regional    |       |  bronce.regional    |       |  bronce.regional    |
+|  bronce.lab1    |       |  bronce.lab1    |       |  bronce.lab1    |
 |  .cmstfl            |       |  .trxpfl            |       |  .blncfl            |
 |  (72 cols)          |       |  (62 cols)          |       |  (102 cols)         |
 |  LC: FechaIngesta,  |       |  LC: TRXDT, CUSTID, |       |  LC: FechaIngesta,  |
@@ -192,7 +192,7 @@
 
 +---------------------+       +---------------------+
 |  Tabla Parametros   |       |  LsdpConstructor    |
-|  (control.regional) |------>|  Rutas              |
+|  (control.lab1) |------>|  Rutas              |
 |  11 claves          |       |  (Volume o S3)      |
 +---------------------+       +---------------------+
           ^
@@ -208,10 +208,10 @@
 
 | # | Entidad | Tipo | Columnas | Liquid Cluster | Ubicacion |
 |---|---------|------|----------|----------------|-----------|
-| 1 | cmstfl | Streaming Table | 72 | FechaIngestaDatos, CUSTID | bronce.regional |
-| 2 | trxpfl | Streaming Table | 62 | TRXDT, CUSTID, TRXTYP | bronce.regional |
-| 3 | blncfl | Streaming Table | 102 | FechaIngestaDatos, CUSTID | bronce.regional |
+| 1 | cmstfl | Streaming Table | 72 | FechaIngestaDatos, CUSTID | bronce.lab1 |
+| 2 | trxpfl | Streaming Table | 62 | TRXDT, CUSTID, TRXTYP | bronce.lab1 |
+| 3 | blncfl | Streaming Table | 102 | FechaIngestaDatos, CUSTID | bronce.lab1 |
 | 4 | LsdpConexionParametros | Utilidad Python | N/A | N/A | utilities/ |
 | 5 | LsdpConstructorRutas | Utilidad Python | N/A | N/A | utilities/ |
 | 6 | LsdpReordenarColumnasLiquidCluster | Utilidad Python | N/A | N/A | utilities/ |
-| 7 | Tabla Parametros | Tabla Delta (existente) | 2 | N/A | control.regional |
+| 7 | Tabla Parametros | Tabla Delta (existente) | 2 | N/A | control.lab1 |

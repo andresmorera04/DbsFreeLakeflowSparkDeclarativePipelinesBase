@@ -10,7 +10,7 @@ El notebook recibe 3 parametros de entrada via `dbutils.widgets.text()`:
 | Parametro | Tipo | Valor por Defecto | Descripcion |
 |-----------|------|-------------------|-------------|
 | catalogoParametro | string | control | Catalogo de Unity Catalog donde se crea la tabla de parametros |
-| esquemaParametro | string | regional | Esquema dentro del catalogo donde se crea la tabla de parametros |
+| esquemaParametro | string | lab1 | Esquema dentro del catalogo donde se crea la tabla de parametros |
 | tablaParametros | string | Parametros | Nombre de la tabla de parametros a crear |
 
 ## Interfaz de Salida
