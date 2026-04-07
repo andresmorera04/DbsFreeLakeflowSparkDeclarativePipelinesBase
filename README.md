@@ -4,7 +4,7 @@
 
 ### Pipeline Declarativo en Arquitectura Medallion sobre Databricks Free Edition
 
-[![Databricks](https://img.shields.io/badge/Databricks-Free%20Edition-FF3621?style=for-the-badge&logo=databricks&logoColor=white)](https://www.databricks.com/product/databricks-free)
+[![Databricks](https://img.shields.io/badge/Databricks-Free%20Edition-FF3621?style=for-the-badge&logo=databricks&logoColor=white)](https://login.databricks.com/signup?provider=DB_FREE_TIER)
 [![Delta Lake](https://img.shields.io/badge/Delta%20Lake-003366?style=for-the-badge&logo=delta&logoColor=white)](https://delta.io/)
 [![PySpark](https://img.shields.io/badge/PySpark-E25A1C?style=for-the-badge&logo=apachespark&logoColor=white)](https://spark.apache.org/docs/latest/api/python/)
 [![Unity Catalog](https://img.shields.io/badge/Unity%20Catalog-Governance-00A972?style=for-the-badge)](https://www.databricks.com/product/unity-catalog)
@@ -148,7 +148,7 @@ El pipeline sigue la **arquitectura medallion** (Bronze / Silver / Gold), un pat
 
 ## <img src="https://img.icons8.com/color/28/000000/rocket.png" width="24"/> Inicio Rapido
 
-> **Prerequisitos**: Cuenta [Databricks Free Edition](https://www.databricks.com/product/databricks-free) activa con Unity Catalog habilitado + VS Code con [Databricks Extension](https://marketplace.visualstudio.com/items?itemName=databricks.databricks).
+> **Prerequisitos**: Cuenta [Databricks Free Edition](https://login.databricks.com/signup?provider=DB_FREE_TIER) activa con Unity Catalog habilitado + VS Code con [Databricks Extension](https://marketplace.visualstudio.com/items?itemName=databricks.databricks).
 
 ### 1. Clonar el repositorio
 
@@ -158,7 +158,7 @@ git clone https://github.com/andresmorera04/DbsFreeLakeflowSparkDeclarativePipel
 
 ### 2. Importar en Databricks
 
-Desde la interfaz web: **Workspace** > **Repos** > **Add Repo** > pegar la URL del repositorio.
+Desde la interfaz web: **Workspace** > **Users** > tu carpeta personal > **Create** > **Git folder** > pegar la URL del repositorio.
 
 ### 3. Ejecutar la configuracion inicial
 
@@ -174,15 +174,15 @@ tablaParametros   = Parametros
 
 Ejecutar en orden los notebooks de simulacion de datos AS400:
 
-| # | Notebook | Registros | Columnas |
-|---|----------|-----------|----------|
-| 1 | `src/.../GenerarParquets/NbGenerarMaestroCliente.py` | 50,000 | 70 |
-| 2 | `src/.../GenerarParquets/NbGenerarTransaccionalCliente.py` | 150,000 | 60 |
-| 3 | `src/.../GenerarParquets/NbGenerarSaldosCliente.py` | 50,000 | 100 |
+| # | Notebook | Archivo AS400 | Registros | Columnas |
+|---|----------|--------------|-----------|----------|
+| 1 | `NbGenerarMaestroCliente` | CMSTFL | 50,000 | 70 |
+| 2 | `NbGenerarSaldosCliente` | BLNCFL | 50,000 | 100 |
+| 3 | `NbGenerarTransaccionalCliente` | TRXPFL | 150,000 | 60 |
 
 ### 5. Crear y ejecutar el pipeline
 
-En **Workflows** > **Pipelines** > **Create Pipeline**, agregar los 6 scripts de `transformations/` y configurar los 9 parametros del pipeline.
+En **Jobs & Pipelines** > **Create** > **ETL Pipeline**, agregar la carpeta `src/LSDP_Laboratorio_Basico` como source code y configurar los 9 parametros del pipeline.
 
 > La guia detallada paso a paso con capturas y parametros exactos esta en **[demo/ConfiguracionInicial.md](demo/ConfiguracionInicial.md)**.
 
@@ -233,7 +233,7 @@ DbsFreeLakeflowSparkDeclarativePipelinesBase/
 │   └── ModeladoDatos.md                     #   Diccionario de datos (10 entidades, ~580 campos)
 │
 ├── demo/                                    # Guias de configuracion
-│   └── ConfiguracionInicial.md              #   Guia paso a paso (8 pasos)
+│   └── ConfiguracionInicial.md              #   Guia paso a paso (9 pasos)
 │
 ├── specs/                                   # Especificaciones SDD (spec-kit)
 │   ├── 001-incremento1-config-inicial/
@@ -292,7 +292,8 @@ Guia paso a paso para replicar el laboratorio desde cero en una cuenta nueva de 
 5. Generar datos de prueba (250,000 registros)
 6. Crear pipeline LSDP con 9 parametros
 7. Ejecutar pipeline (Bronce > Plata > Oro)
-8. Verificar resultados con consultas SQL
+8. Ejecucion incremental del pipeline
+9. Verificar resultados con consultas SQL
 
 ---
 
