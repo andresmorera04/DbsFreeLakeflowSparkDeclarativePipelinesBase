@@ -31,7 +31,7 @@ en tres capas del medallion y genera productos de datos analiticos — todo sobr
 - [Stack Tecnologico](#stack-tecnologico)
 - [Inicio Rapido](#-inicio-rapido)
 - [Estructura del Proyecto](#estructura-del-proyecto)
-- [Documentacion](#-documentacion)
+- [Documentacion](#documentacion)
 - [Datos del Pipeline](#datos-del-pipeline)
 - [Desarrollo con IA Asistida](#-desarrollo-con-ia-asistida)
 - [Licencia](#licencia)
@@ -244,7 +244,7 @@ DbsFreeLakeflowSparkDeclarativePipelinesBase/
 │   └── 006-docs-readme-esquema/
 │
 ├── README.md                                # Este archivo
-└── SYSTEM.md                                # Documento de referencia del sistema
+└── SYSTEM.md                                # Spec-Driven Development del Laboratorio
 ```
 
 ---
@@ -280,6 +280,10 @@ Diccionario de datos completo de las 10 entidades del pipeline:
 | **Control** | Parametros (16 registros) | — |
 
 Incluye: diagrama de linaje, mapeo columna-a-columna AS400 a espanol, logica de los 8 campos calculados y las 9 expectativas de calidad.
+
+### [SYSTEM.md — Spec-Driven Development](SYSTEM.md)
+
+Documento centralizado que define el contexto del proyecto para el framework **spec-kit**. Contiene la configuracion de Spec-Driven Development (SDD) que dirige la generacion de especificaciones, planes, tareas e implementacion asistida por IA a traves de los 6 incrementos del laboratorio.
 
 ### [Guia de Configuracion Inicial](demo/ConfiguracionInicial.md)
 
